@@ -1,0 +1,32 @@
+<h2><%= t.send(@type_file) %></h2>
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <tr>
+      <th>
+        <%= t.file %>
+      </th>
+      <th>
+        <%= t.edit %>
+      </th>
+      <th>
+        <%= t.delete %>
+      </th>
+    </tr>
+    <% @files.each do |f| %>
+    <tr>
+      <td>
+        <%= f %>
+      </td>
+      <td>
+        <a href="/<%= @type_file %>?file=<%= f %>" class="btn btn-default"><i class="fa fa-edit" title="<%= t.edit %>"></i></a>
+      </td>
+      <td>
+        <form method="post" action="/<%= @type_file %>/delete?file=<%= f %>" class="inline">
+	  <button type="submit" class="btn btn-default"><i class="fa fa-trash" title="<%= t.delete %>"></i></button> 
+        </form>
+      </td>
+    </tr>
+    <% end %>
+  </table>
+</div>
+   
