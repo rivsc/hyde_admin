@@ -10,6 +10,7 @@ delete: supprimer
 are_you_sure: êtes-vous sûr
 tag: mot-clé
 tags: mots-clés
+help_tags: Mettez les tags séparés par des virgules
 layout: présentation
 configuration: configuration
 files: fichiers
@@ -25,3 +26,16 @@ date: date
 content: contenu
 publish: publier
 path: chemin
+overview: aperçu
+default_layout: présentation par défaut
+help_default_layout: présentation par défaut pour les posts et pages
+deploy_dest_user: Utilisateur pour déploiement
+help_deploy_dest_user: Utilisateur pour déploiement par ssh
+deploy_dest_address: Adresse pour déploiement
+help_deploy_dest_address: Domaine ou adresse IP pour déploiement à travers ssh
+deploy_dest_path: chemin distant pour déploiement
+help_deploy_dest_path: chemin distant pour déploiement du site
+rsync_fullpath: chemin rsync
+help_rsync_fullpath: si rsync n'est pas dans le PATH, sinon laissez 'rsync'
+site_index: nom du fichier index pour le site
+help_site_index: Lien pour le lien aperçu, pensez à l'extention si nécessaire

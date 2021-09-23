@@ -10,6 +10,7 @@ delete: delete
 are_you_sure: are you sure
 tag: tag
 tags: tags
+help_tags: set tags separate by comma
 layout: layout
 configuration: configuration
 files: files
@@ -25,3 +26,17 @@ date: date
 content: content
 publish: publish
 path: path
+overview: overview
+default_layout: default layout
+help_default_layout: default layout for jekyll posts/pages
+deploy_dest_user: deploy remote user
+help_deploy_dest_user: Ssh user for rsync
+deploy_dest_address: deploy remote domain
+help_deploy_dest_address: remote domain for ssh deployment
+deploy_dest_path: deploy remote path
+help_deploy_dest_path: remote path on disk for ssh deployment
+rsync_fullpath: rsync path
+help_rsync_fullpath: if rsync is not in PATH, othervise just let 'rsync'
+site_index: index file name of site
+help_site_index: link to open when we click on overview
+

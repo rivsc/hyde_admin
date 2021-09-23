@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.authors     = ["Sylvain Claudel"]
   s.email       = 'claudel.sylvain@gmail.com'
   
-  #all_files       = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
-  s.files       = ["lib/hola.rb"]
+  all_files     = `git ls-files`.split("\n").reject{ |filepath| filepath.start_with? 'test/' }
+  s.files       = all_files
 
-  s.executables   = all_files.grep(%r!^exe/!) { |f| File.basename(f) }
+  s.executables   = ['hyde_admin']
   s.bindir        = "bin"
   s.require_paths = ["lib"]
 
@@ -25,4 +25,8 @@ Gem::Specification.new do |s|
   }
 
   s.license       = 'MIT'
+  s.add_runtime_dependency("roda", "~> 3.48.0")
+  s.add_runtime_dependency("roda-i18n", "~> 0.4.0")
+  #s.add_runtime_dependency("i18n", "~> 0.4.0") # I18n.transliterate (already required by jekyll)
+  s.add_runtime_dependency('jekyll') # Because we call jekyll binary
 end

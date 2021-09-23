@@ -21,27 +21,17 @@
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">
+            <a class="nav-link active" aria-current="page" href="/<%= @hyde_parameters['site_index'] %>">
               <span data-feather="home"></span>
-              Site
+              <%= t.overview %>
             </a>
+          </li>
+          <li class="nav-item">
           </li>
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/dashboard">
               <span data-feather="home"></span>
               <%= t.dashboard %>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/deploy">
-              <span data-feather="home"></span>
-              <%= t.deploy %>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/rebuild">
-              <span data-feather="home"></span>
-              <%= t.rebuild %>
             </a>
           </li>
           <li class="nav-item">
@@ -62,6 +52,20 @@
               <%= t.posts %>
             </a>
           </li>
+          <li class="nav-item"></li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/rebuild">
+              <span data-feather="home"></span>
+              <%= t.rebuild %>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/deploy">
+              <span data-feather="home"></span>
+              <%= t.deploy %>
+            </a>
+          </li>
+          <li class="nav-item"></li>
           <li class="nav-item">
             <a class="nav-link" href="/configuration">
               <span data-feather="layers"></span>

@@ -1,10 +1,13 @@
 <h2><%= t.send(@type_file) %></h2>
 
-<form action="/<%= @type_file %>?file=<%= @file %>" method="post">
+<% new_record = @file.empty? %>
+
+<% file = (!new_record ? "?file=#{@file}" : "") %>
+
+<form action="/<%= @type_file %><%= file %>" method="post">
   <div class="mb-3">
     <label for="i-path" class="form-label"><%= t.path %></label>
-    <input type="text" class="form-control" value="<%= @file %>" name="new_file" id="i-path">
-    <!--<div id="emailHelp" class="form-text">Name of file</div>-->
+    <input type="text" class="form-control" value="<%= @file %>" name="new_file" id="i-path" readonly>
   </div>  
   <div class="mb-3">
     <label for="i-title" class="form-label"><%= t.title %></label>
@@ -17,6 +20,7 @@
   <div class="mb-3">
     <label for="i-tags" class="form-label"><%= t.tags %></label>
     <input type="text" value="<%= @headers['tags'] %>" class="form-control" name="tags" id="i-tags">
+    <div id="i-tags-help" class="form-text"><%= t.help_tags %></div>
   </div>
   <div class="mb-3 form-check">
     <input type="checkbox" class="form-check-input" name="publish" id="i-publish">
@@ -35,7 +39,7 @@
 
   <div class="mb-3">
     <label for="i-content" class="form-label"><%= t.content %></label>
-    <textarea class="form-control" id="i-content" rows="3" name="content"><%#= %></textarea>
+    <textarea class="form-control" id="i-content" rows="3" name="content"><%= @content %></textarea>
   </div>
 
 <!--
@@ -54,4 +58,3 @@
 -->
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-

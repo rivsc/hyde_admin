@@ -1,8 +1,8 @@
 ---
-default_layout:
-deploy_dest_user: pi
-deploy_dest_address: guerin.rivsc.ovh
-deploy_dest_path: "/home/pi/testblog"
-path_to_jekyll_src: "/Users/scl/blog/rivscblog-zolan"
+default_layout: default
+deploy_dest_user: root
+deploy_dest_address: example.com
+deploy_dest_path: "/absolute/remote/path/mysite"
+path_to_jekyll_src: "/absolute/local/path/mysite"
 rsync_fullpath: rsync
 site_index: index.html
