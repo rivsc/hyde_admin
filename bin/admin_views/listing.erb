@@ -1,28 +1,29 @@
-<h2><%= t.send(@type_file) %></h2>
+<h2><%= t.send(@type_file).capitalize %> &nbsp; <a href="/<%= @type_file %>/new" class="btn btn-secondary btn-sm"><i class="fas fa-plus"></i> <%= t.new.capitalize %></a></h2>
+
 <div class="table-responsive">
   <table class="table table-striped table-sm">
     <tr>
       <th>
-        <%= t.file %>
+        <%= t.file.capitalize %>
       </th>
       <th>
-        <%= t.edit %>
+        <%= t.edit.capitalize %>
       </th>
       <th>
-        <%= t.delete %>
+        <%= t.delete.capitalize %>
       </th>
     </tr>
     <% @files.each do |f| %>
     <tr>
       <td>
-        <%= f %>
+        <%= f.gsub(File.join(Dir.pwd, ''),'') %>
       </td>
       <td>
-        <a href="/<%= @type_file %>?file=<%= f %>" class="btn btn-default"><i class="fa fa-edit" title="<%= t.edit %>"></i></a>
+        <a href="/<%= @type_file %>?file=<%= f %>" class="btn btn-default"><i class="fa fa-edit" title="<%= t.edit.capitalize %>"></i></a>
       </td>
       <td>
         <form method="post" action="/<%= @type_file %>/delete?file=<%= f %>" class="inline">
-	  <button type="submit" class="btn btn-default"><i class="fa fa-trash" title="<%= t.delete %>"></i></button> 
+	        <button type="submit" class="btn btn-default"><i class="fa fa-trash" title="<%= t.delete.capitalize %>"></i></button>
         </form>
       </td>
     </tr>

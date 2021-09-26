@@ -5,8 +5,11 @@ pages: pages
 post: article
 posts: articles
 save: sauvegarder
+new: nouveau
 edit: éditer
 delete: supprimer
+create: créer
+upload: uploader
 are_you_sure: êtes-vous sûr
 tag: mot-clé
 tags: mots-clés
@@ -26,7 +29,9 @@ date: date
 content: contenu
 publish: publier
 path: chemin
+help_path: changer le chemin peut affecter le SEO et provoquer des 404
 overview: aperçu
+submit: valider
 default_layout: présentation par défaut
 help_default_layout: présentation par défaut pour les posts et pages
 deploy_dest_user: Utilisateur pour déploiement
@@ -39,3 +44,9 @@ rsync_fullpath: chemin rsync
 help_rsync_fullpath: si rsync n'est pas dans le PATH, sinon laissez 'rsync'
 site_index: nom du fichier index pour le site
 help_site_index: Lien pour le lien aperçu, pensez à l'extention si nécessaire
+hyde_admin_language: hyde admin langue
+help_hyde_admin_language: Pour changer la langue d'interface de hyde admin
+set_date_today: mets la date du jour
+change_date_path: mets à jour la date dans le chemin de fichier
+change_title_path: mets à jour le titre dans le chemin de fichier
+directory_input_placeholder: nom du dossier à créer

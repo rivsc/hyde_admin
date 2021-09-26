@@ -1,15 +1,13 @@
-<h2><%= t.configuration %></h2>
+<h2><%= t.configuration.capitalize %></h2>
 
 <form action="/configuration" method="post">
-
   <% @hyde_parameters.each_pair do |setting, value| %>
     <div class="mb-3">
-      <label for="i-<%= setting %>" class="form-label"><%= t.send(setting) %></label>
+      <label for="i-<%= setting %>" class="form-label"><%= t.send(setting).capitalize %></label>
       <input type="text" class="form-control" value="<%= value %>" name="<%= setting %>" id="i-<%= setting %>">
-      <div id="i-<%= setting %>-help" class="form-text"><%= t.send("help_#{setting}") %></div>
+      <div id="i-<%= setting %>-help" class="form-text"><%= t.send("help_#{setting}").capitalize %></div>
     </div>
   <% end %>
-
-  <button type="submit" class="btn btn-primary"><%= t.submit %></button>
+  <button type="submit" class="btn btn-primary"><%= t.submit.capitalize %></button>
 </form>
 

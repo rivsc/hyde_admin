@@ -1,0 +1,9 @@
+<h2><%= t.edit.capitalize %></h2>
+
+<form action="/files/edit?file=<%= @file %>" method="post">
+  <div class="mb-3">
+    <label for="i-content" class="form-label"><%= t.content.capitalize %></label>
+    <textarea class="form-control text-editor" id="i-content" rows="3" name="content" style="font-family: <%= (['.html', '.xml', '.yml', '.js', '.md'].include?(File.extname(@file)) ? 'monospace' : 'inherit') %>"><%= @content %></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary"><%= t.submit.capitalize %></button>
+</form>

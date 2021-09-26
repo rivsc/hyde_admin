@@ -3,6 +3,8 @@ default_layout: default
 deploy_dest_user: root
 deploy_dest_address: example.com
 deploy_dest_path: "/absolute/remote/path/mysite"
-path_to_jekyll_src: "/absolute/local/path/mysite"
 rsync_fullpath: rsync
 site_index: index.html
+hyde_admin_language: en
+# TODO format date in url (regexp)
+# TODO default format for new post/page

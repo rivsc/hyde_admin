@@ -5,8 +5,11 @@ pages: pages
 post: post
 posts: posts
 save: save
+new: new
 edit: edit
 delete: delete
+create: create
+upload: upload
 are_you_sure: are you sure
 tag: tag
 tags: tags
@@ -26,7 +29,9 @@ date: date
 content: content
 publish: publish
 path: path
+help_tags: change the path can affect SEO or 404
 overview: overview
+submit: submit
 default_layout: default layout
 help_default_layout: default layout for jekyll posts/pages
 deploy_dest_user: deploy remote user
@@ -39,4 +44,9 @@ rsync_fullpath: rsync path
 help_rsync_fullpath: if rsync is not in PATH, othervise just let 'rsync'
 site_index: index file name of site
 help_site_index: link to open when we click on overview
-
+hyde_admin_language: hyde admin language
+help_hyde_admin_language: To change hyde admin language interface
+set_date_today: set date at today
+change_date_path: update date in path
+change_title_path: update title in path
+directory_input_placeholder: directory name to create
