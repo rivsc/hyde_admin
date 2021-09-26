@@ -1,3 +1,3 @@
 bin/fslightbox/* linguist-vendored
 bin/lib/* linguist-vendored
-bin/mode/* linguist-vendored
+bin/mode/*/* linguist-vendored
