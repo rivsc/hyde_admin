@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= @hyde_parameters['hyde_admin_language'] %>">
   <head>
     <meta charset="utf-8">
     <title>Hyde for Jekyll</title>
@@ -21,32 +21,10 @@
     <script src="/mode/yaml/yaml.js"></script>
     <script src="/mode/xml/xml.js"></script>
     <script src="/mode/markdown/markdown.js"></script>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-    <script type="text/javascript" charset="utf-8">
-        $(function(){
-            $(document).on('click','#btn-deploy,#btn-rebuild',function(elt){
-                let path = '';
-
-                if(elt.id === 'btn-deploy'){
-                    path = '/deploy';
-                }else if(elt.id === 'btn-rebuild'){
-                    path = '/rebuild';
-                }
-
-                $.post( path, {
-                    beforeSend: function( xhr ) {
-                        $('#waiting').show();
-                    }
-                })
-                    .done(function( data ) {
-                        $('#waiting').hide();
-                        return false;
-                    });
-            });
-        });
-    </script>
+    <link rel="stylesheet" href="/hyde_assets/hyde_admin.css">
+    <script src="/hyde_assets/hyde_admin.js"></script>
   </head>
   <body>
     <div class="container-fluid">
@@ -114,11 +92,13 @@
                 </a>
               </li>
             </ul>
+            <p class="text-center text-muted"><br><br><em>Hyde Admin V.<%= HydeAdmin::VERSION %></em>&nbsp;&nbsp;&nbsp;<a href="https://github.com/rivsc/hyde_admin" class="link-secondary"><i class="fab fa-github"></i></a></p>
           </div>
         </nav>
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">Hyde Admin for Jekyll</h1>
+            <!--
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group me-2">
                 <button type="button" class="btn btn-sm btn-outline-secondary"><%= t.backup_zip %></button>
@@ -129,6 +109,7 @@
                 This week
               </button>
             </div>
+            -->
           </div>
           <%= yield %>
         </main>
@@ -139,14 +120,37 @@
       <i class="fas fa-circle-notch fa-10x fa-spin" style="margin-top:40vh;"></i>
     </div>
 
+    <div class="modal modal-image" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Images</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body modal-body-image">
+            <% path_of_images = File.join(Dir.pwd, @hyde_parameters['images_path'], "**") %>
+            <% $stderr.puts(path_of_images) %>
+            <% Dir.glob(path_of_images)[(@page || 0) * 9, ((@page || 0) + 1) * 9 ].each do |img| %>
+              <% img = img.gsub(Dir.pwd, "") %>
+              <div class="image-element">
+                <img src="<%= img %>" alt="<%= img %>">
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script type="text/javascript" charset="utf-8">
       <% if @file %>
       if(window.document.getElementById('i-content')){
-        var myCodeMirror = CodeMirror.fromTextArea(window.document.getElementById('i-content'), {
+          window.myCodeMirror = CodeMirror.fromTextArea(window.document.getElementById('i-content'), {
             lineNumbers: true,
             tabSize: 2,
             indentWithTabs: false,
-            mode: "<%= {'.js' => 'javascript', '.json' => 'javascript', '.xml' => 'xml', '.svg' => 'xml', '.css' => 'css', '.yml' => 'yaml', '.sass' => 'sass', '.rb' => 'ruby', '.md' => 'markdown'}[File.extname(@file)] %>"
+            mode: "<%= {'.js' => 'javascript', '.json' => 'javascript', '.xml' => 'xml', '.svg' => 'xml', '.css' => 'css', '.yml' => 'yaml', '.sass' => 'sass', '.rb' => 'ruby', '.md' => 'markdown'}[File.extname(@file)] || 'markdown' %>"
         });
       }
       <% end %>

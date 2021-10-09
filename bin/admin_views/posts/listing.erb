@@ -22,7 +22,8 @@
         <a href="/<%= @type_file %>?file=<%= f %>" class="btn btn-default"><i class="fa fa-edit" title="<%= t.edit.capitalize %>"></i></a>
       </td>
       <td>
-        <form method="post" action="/<%= @type_file %>/delete?file=<%= f %>" class="inline">
+        <form method="post" action="/<%= @type_file %>/delete" class="inline form-confirm" data-confirm="<%= t.are_you_sure %>">
+          <input type="hidden" name="file" value="<%= f %>">
 	        <button type="submit" class="btn btn-default"><i class="fa fa-trash" title="<%= t.delete.capitalize %>"></i></button>
         </form>
       </td>

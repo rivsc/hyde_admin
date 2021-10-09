@@ -1,0 +1,156 @@
+<h2><%= t.send(@type_file).capitalize %></h2>
+
+<% file_params = (!@new_record ? "?file=#{@file}" : "") %>
+
+<form action="/<%= @type_file %><%= file_params %>" method="post">
+  <% if !@new_record %>
+    <div class="mb-3">
+      <label for="i-path" class="form-label"><%= t.path.capitalize %></label>
+      <div class="input-group">
+        <input type="text" class="form-control" value="<%= @file %>" name="new_file" id="i-path">
+        <span class="input-group-text">
+          <i class="fas fa-calendar-alt" id="btn-date-path" title="<%= t.change_date_path %>"></i>
+        </span>
+        <span class="input-group-text">
+          <i class="fas fa-sync-alt" id="btn-title-path" title="<%= t.change_title_path %>"></i>
+        </span>
+      </div>
+      <div id="i-path-help" class="form-text"><%= t.help_path %></div>
+    </div>
+  <% end %>
+  <div class="mb-3">
+    <label for="i-title" class="form-label"><%= t.title.capitalize %></label>
+    <input type="text" value="<%= @headers.delete('title') %>" class="form-control" name="title" id="i-title">
+  </div>
+  <div class="mb-3">
+    <label for="i-date" class="form-label"><%= t.date.capitalize %></label>
+    <div class="input-group">
+      <input type="text" value="<%= @headers.delete('date') || Time.now.strftime('%Y-%m-%d %H:%M:%S %z') %>" class="form-control" name="date" id="i-date">
+      <span class="input-group-text">
+        <i class="fas fa-calendar-day" id="btn-date-today" title="<%= t.set_date_today %>"></i>
+      </span>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="i-tags" class="form-label"><%= t.tags.capitalize %></label>
+    <input type="text" value="<%= @headers.delete('tags') %>" class="form-control" name="tags" id="i-tags">
+    <div id="i-tags-help" class="form-text"><%= t.help_tags %></div>
+  </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" name="publish" value="publish" id="i-publish">
+    <label class="form-check-label" for="i-publish"><%= t.publish.capitalize %></label>
+  </div>
+
+  <% if @hyde_parameters['display_layout'].to_s == 'true' %>
+    <div class="mb-3">
+      <label for="i-layout" class="form-label"><%= t.layout.capitalize %></label>
+      <select class="form-select" aria-label="Choice layout" name="layout">
+        <% Dir.glob(File.join(Dir.pwd, '_layouts', '*')).each do |f| %>
+          <% layout = File.basename(f, File.extname(f)) %>
+          <option <%= ((@headers['layout'] == f || (@headers['layout'].to_s.empty? && layout == @hyde_parameters['default_layout'])) ? 'selected' : '') %> value="<%= layout %>"><%= layout %></option>
+        <% end %>
+      </select>
+    </div>
+    <% @headers.delete('layout') %>
+  <% else %>
+    <input type="hidden" name="layout" value="<%= @hyde_parameters['default_layout'] %>">
+  <% end %>
+
+  <% if @hyde_parameters['display_format'].to_s == 'true' %>
+    <div class="mb-3">
+      <label for="i-format" class="form-label"><%= t.format.capitalize %></label>
+      <select class="form-select" id="select-format" aria-label="Choice format" name="format">
+        <% format = File.extname(@file) %>
+        <% format = ".#{@hyde_parameters['default_format']}" if format.empty? %>
+        <% { 'html' => 'html', 'markdown' => 'md' }.each do |k, v| %>
+          <option <%= (format == ".#{v}" ? 'selected' : '') %> value="<%= v %>"><%= k %></option>
+        <% end %>
+      </select>
+    </div>
+    <script type="text/javascript" charset="utf-8">
+        window.mode_markdown = '<%= format %>' === '.md';
+    </script>
+  <% else %>
+    <input type="hidden" name="format" value="<%= @hyde_parameters['default_format'] %>">
+    <script type="text/javascript" charset="utf-8">
+      window.mode_markdown = '<%= @hyde_parameters['default_format'] %>' === 'md';
+    </script>
+  <% end %>
+
+  <% @headers.each do |k,v| %>
+    <div class="mb-3">
+      <label for="i-<%= k %>" class="form-label"><%= k %></label>
+      <input type="text" value="<%= v %>" class="form-control" name="<%= k %>" id="i-<%= k %>">
+    </div>
+  <% end %>
+
+  <a href="#" class="btn btn-secondary mb-2" id="add-header"><i class="fas fa-plus"></i> <%= t.add_header.capitalize %></a>
+  <div class="mb-3 custom-headers"></div>
+
+  <div class="mb-3 template-header" style="display: none">
+    <div class="row">
+      <div class="col-sm-4"><input type="text" class="col-sm-6 form-control header-name" name="" placeholder="header name"></div>
+      <div class="col-sm-8"><input type="text" class="col-sm-6 form-control header-value" name="" placeholder="header value"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" charset="utf-8">
+      window.custom_headers_i = 0;
+      $(document).on('click', '#add-header', function(){
+          $('.template-header').clone().appendTo('.custom-headers');
+          let elt = $('.custom-headers .template-header');
+          elt.find('.header-name').attr('name', 'header' + window.custom_headers_i + '[]');
+          elt.find('.header-value').attr('name', 'header' + window.custom_headers_i + '[]');
+          elt.show();
+          elt.removeClass('template-header');
+          window.custom_headers_i += 1;
+          return false;
+      });
+  </script>
+
+  <div class="mb-3">
+    <label for="i-content" class="form-label"><%= t.content.capitalize %> <a href="https://jekyllrb.com/docs/liquid/" class="text-secondary" target="_blank"><i class="fas fa-question-circle"></i></a></label>
+
+    <% path = File.join(Pathname.new(File.dirname(__FILE__)).parent, 'editor_html.erb') %>
+    <%= ERB.new(File.read(path)).result(binding) %>
+
+    <textarea class="form-control text-editor" id="i-content" rows="3" name="content"><%= @content %></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary"><%= t.submit.capitalize %></button>
+</form>
+
+<script type="text/javascript" charset="utf-8">
+    $(document).on('click', '#select-format', function(){
+        let ext_mode = { md: "markdown", html: "htmlmixed"};
+        console.log($('#select-format').val());
+        window.myCodeMirror.setOption("mode", ext_mode[$('#select-format').val()]);
+        window.mode_markdown = ($('#select-format').val() == 'md');
+        return true;
+    });
+    $(document).on('click', '#btn-date-path', function(){
+        $.post( "/ajax/update_path_date", { date: $('#i-date').val(), path: $('#i-path').val() })
+            .done(function( data ) {
+                $('#i-path').val(data);
+            });
+        return false;
+    });
+    $(document).on('click', '#btn-title-path', function(){
+        $.post( "/ajax/update_path_title", { title: $('#i-title').val(), path: $('#i-path').val() })
+            .done(function( data ) {
+                $('#i-path').val(data);
+            });
+        return false;
+    });
+
+    $(document).on('click', '#btn-date-today', function(){
+        $.post( "/ajax/update_date_today", {})
+            .done(function( data ) {
+                $('#i-date').val(data);
+            });
+        return false;
+    });
+
+    <% path = File.join(Pathname.new(File.dirname(__FILE__)).parent, 'editor_js.erb') %>
+    <%= ERB.new(File.read(path)).result(binding) %>
+
+</script>

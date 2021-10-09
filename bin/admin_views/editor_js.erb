@@ -1,0 +1,120 @@
+$(document).on('click', '.codemirror-toolbar .fa-undo-alt', function(){
+  window.myCodeMirror.undo();
+});
+$(document).on('click', '.codemirror-toolbar .fa-redo-alt', function(){
+  window.myCodeMirror.redo();
+});
+$(document).on('click', '.codemirror-toolbar .fa-file-image', function(){
+  $('.modal-image').modal('show');
+});
+$(document).on('click', '.modal-image img', function(){
+  let img_src = '<img src="' + $(this).attr('src') + '" alt="<%= t.default_alt_img %>" title="<%= t.default_title_img %>" />';
+  if(window.mode_markdown){
+    img_src = '![<%= t.default_alt_img %>](' + $(this).attr('src') + ')';
+  }
+  window.myCodeMirror.replaceSelection(img_src);
+  $('.modal-image').modal('hide');
+});
+$(document).on('click', '.codemirror-toolbar .fa-heading', function(){
+  let obj_cursor = window.myCodeMirror.getCursor();
+
+  let heading_number = 0;
+  if($(this).hasClass('cmt-heading-1')){
+    heading_number = 1;
+  }else if($(this).hasClass('cmt-heading-2')){
+    heading_number = 2;
+  }else if($(this).hasClass('cmt-heading-3')){
+    heading_number = 3;
+  }else if($(this).hasClass('cmt-heading-4')){
+    heading_number = 4;
+  }else if($(this).hasClass('cmt-heading-5')){
+    heading_number = 5;
+  }
+
+  let begin_str = '<h' + heading_number + '>';
+  let end_str = '</h' + heading_number + '>';
+  if(window.mode_markdown){
+    begin_str = '#';
+    for (let i = 1; i < heading_number; i++) {
+      begin_str = begin_str + '#';
+    }
+    begin_str = begin_str + ' ';
+    end_str = '';
+  }
+  window.myCodeMirror.replaceSelection(begin_str + window.myCodeMirror.getSelection() + end_str);
+  if(!window.myCodeMirror.somethingSelected()){
+    window.myCodeMirror.setCursor({ line: obj_cursor.line, ch: obj_cursor.ch + begin_str.length });
+  }
+  window.myCodeMirror.focus();
+});
+$(document).on('click', '.codemirror-toolbar .cmt-replace', function(){
+  let begin_str = '';
+  let end_str = '';
+
+  if($(this).hasClass('fa-underline')){
+  begin_str = '<u>';
+    end_str = '</u>';
+    /*if(window.mode_markdown){
+      begin_str = '';
+      end_str = '';
+    }*/
+  }else if($(this).hasClass('fa-bold')){
+  begin_str = '<b>';
+    end_str = '</b>';
+    if(window.mode_markdown){
+      begin_str = '**';
+      end_str = '**';
+    }
+  }else if($(this).hasClass('fa-italic')){
+  begin_str = '<i>';
+    end_str = '</i>';
+    if(window.mode_markdown){
+      begin_str = '*';
+      end_str = '*';
+    }
+  }else if($(this).hasClass('fa-strikethrough')){
+  begin_str = '<s>';
+    end_str = '</s>';
+    if(window.mode_markdown){
+      begin_str = '~~';
+      end_str = '~~';
+    }
+  }else if($(this).hasClass('fa-link')){
+  begin_str = '<a href="https://www.example.com/">';
+    end_str = '</a>';
+    if(window.mode_markdown){
+      begin_str = '[';
+      end_str = '](https://www.example.com/)';
+    }
+  }else if($(this).hasClass('fa-quote-left')){
+  begin_str = '<blockquote>\n  <p>';
+    end_str = '</p>\n</blockquote>';
+    if(window.mode_markdown){
+      begin_str = '>';
+      end_str = '';
+    }
+  }else if($(this).hasClass('fa-list')){
+  begin_str = '<ul>\n  <li>';
+    end_str = '</li>\n</ul>';
+    if(window.mode_markdown){
+      begin_str = '- ';
+      end_str = '';
+    }
+  }else if($(this).hasClass('fa-list-ol')){
+  begin_str = '<ol>\n  <li>';
+    end_str = '</li>\n</ol>';
+    if(window.mode_markdown){
+      begin_str = '1. ';
+      end_str = '';
+    }
+  }
+
+  let obj_cursor = window.myCodeMirror.getCursor();
+  window.myCodeMirror.replaceSelection(begin_str + window.myCodeMirror.getSelection() + end_str);
+  if(!window.myCodeMirror.somethingSelected()){
+    let moreline = (begin_str.split('\n').length > 1 ? begin_str.split('\n').length / 2 : 0);
+    let morech = (moreline > 0 ? begin_str.split('\n')[begin_str.split('\n').length - 1].length : begin_str.length);
+    window.myCodeMirror.setCursor({ line: obj_cursor.line + moreline, ch: obj_cursor.ch + morech });
+  }
+  window.myCodeMirror.focus();
+});

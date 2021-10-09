@@ -5,8 +5,9 @@ require 'yaml'
 require 'fileutils'
 require 'i18n'
 require 'date'
+require '../lib/hyde_admin/version'
 
-# TODO roda-http-auth (set user/pass in yml)
+# TODO détecter format nouveau post (pour codemirror)
 
 class App < Roda
   YML_FILE_NAME = "hyde_admin.yml"
@@ -19,7 +20,9 @@ class App < Roda
   plugin :i18n, translations: File.join(File.expand_path(File.dirname(__FILE__)), 'i18n') # gem 'roda-i18n'
   opts[:root] = Dir.pwd
   plugin :public, root: File.join(Dir.pwd, '_site') # simulate jekyll site
-  plugin :static, ['/mode', '/lib', '/fslightbox'], :root => File.join(File.expand_path(File.dirname(__FILE__)))
+  plugin :static, ['/mode', '/lib', '/fslightbox', '/hyde_assets'], :root => File.join(File.expand_path(File.dirname(__FILE__)))
+  plugin :http_auth
+  plugin :common_logger
 
   def initialize(param)
     yml_in_current_dir = File.join(Dir.pwd, YML_FILE_NAME)
@@ -38,11 +41,48 @@ class App < Roda
     I18n.transliterate(title).downcase.gsub(/[^a-zA-Z ]/,'').gsub(' ','-')
   end
 
-  def self.urlize(date_str, title)
-    "#{Date.parse(date_str).strftime('%Y-%m-%d')}-#{self.transliterate_title_for_url(title)}"
+  def self.urlize(date_str, title, with_date = true)
+    url_str = ""
+    if with_date
+      url_str += "#{Date.parse(date_str).strftime('%Y-%m-%d')}-"
+    end
+    url_str += "#{self.transliterate_title_for_url(title)}"
+    url_str
   end
 
+  def self.extract_header_str(str)
+    str.scan(/---(.*?)---/m).flatten.first
+  end
+
+  def self.extract_header(str)
+    headers = App.extract_header_str(str).to_s.split("\n")
+    headers = headers.select{ |header| !header.empty? }.map{ |header| header.scan(/([a-zA-Z0-9]*): (.*)/).flatten }.select{ |header| !header.empty? }
+    hsh_headers = {}
+    if !headers.flatten.empty?
+      #$stderr.puts "==============="
+      #$stderr.puts headers.inspect
+      hsh_headers = Hash[headers]
+    end
+    hsh_headers
+  end
+
+  def self.remove_header(str)
+    str.gsub(/---(.*?)---/m, "")
+  end
+
+  FORMAT_DATE_FILENAME = '%Y-%m-%d'
+  FORMAT_DATE_INPUT_FILENAME = '%Y-%m-%d %H:%M:%S %z'
+
+  REGEXP_EXTRACT_DATE_FROM_FILENAME = /\d{4}-\d{2}-\d{2}-/
+  REGEXP_EXTRACT_DATE_TITLE_FROM_FILENAME = /(\d{4}-\d{2}-\d{2}-)(.*)(\.[^.]*)$/
+
   route do |r|
+    @page = r.params['page']
+
+    if @hyde_parameters['hyde_admin_auth'].to_s == 'true'
+      http_auth {|u, p| [u, p] == [@hyde_parameters['hyde_admin_user'], @hyde_parameters['hyde_admin_password']] }
+    end
+
     # GET serve jekyll site
     r.public
 
@@ -60,7 +100,7 @@ class App < Roda
     # Rebuild static files
     r.on "rebuild" do
       puts Dir.pwd
-      `cd #{Dir.pwd} && jekyll b && sleep 10`
+      `cd #{Dir.pwd} && jekyll b`
       r.redirect "/dashboard"
     end
 
@@ -73,7 +113,7 @@ class App < Roda
       r.params.each_pair do |k,v|
         @hyde_parameters[k] = v
       end
-      File.open(File.join(Dir.pwd, "hyde_admin.yml"),"w+") do |f|
+      File.open(File.join(Dir.pwd, YML_FILE_NAME),"w+") do |f|
         f.write(@hyde_parameters.to_yaml)
       end
       r.redirect "/configuration"
@@ -92,16 +132,17 @@ class App < Roda
 
       # List files
       r.get "index" do
-        @files = Dir[File.join(@dir_path, '*')].sort.reverse
-        view("browse")
+        @files = Dir[File.join(@dir_path, '*')].sort(&:casecmp).reverse
+        @parent_dir = (@dir_path != Dir.pwd)
+        view("files/listing")
       end
 
       # Upload files
       r.post "create" do
         files = [r.params['files']].flatten # 1 or more files
         files.each do |file|
-          File.open(File.join(@dir_path, file.filename)) do |f|
-            f.write(file.read)
+          File.open(File.join(@dir_path, file[:filename]), 'wb') do |f|
+            f.write(file[:tempfile].read)
           end
         end
         r.redirect "/files/index?dir_path=#{@dir_path}"
@@ -113,11 +154,41 @@ class App < Roda
         r.redirect "/files/index?dir_path=#{@dir_path}"
       end
 
+      # Create file
+      r.post "create_file" do
+        fullpath = File.join(@dir_path, r.params['file_name'])
+        File.open(fullpath, 'w+') do |f|
+          f.write("")
+        end
+        r.redirect "/files/edit?dir_path=#{@dir_path}&file=#{fullpath}"
+      end
+
       # Edit text files
       r.get "edit" do
         @file = r.params['file']
         @content = File.read(@file)
-        view("edit_text_file")
+        @header = App.extract_header_str(@content)
+        @content = App.remove_header(@content)
+        @has_header = (!@header.nil? && !@header.empty?)
+        @has_editor = ['.html','.md'].include?(File.extname(@file))
+        view("files/edit")
+      end
+
+      # Update file
+      r.post "update" do
+        @file = r.params['file']
+        @content = r.params['content']
+        @header = r.params['header']
+        File.open(@file,"w+") do |f|
+          if !@header.nil? and !@header.empty?
+            f.write("---")
+            f.write(@header)
+            f.write("---")
+            f.write("")
+          end
+          f.write(@content)
+        end
+        view("files/edit")
       end
 
       # Delete
@@ -132,18 +203,18 @@ class App < Roda
       r.post "update_path_date" do
         path = r.params['path']
         date = Date.parse(r.params['date'])
-        new_path = path.gsub(/\d{4}-\d{2}-\d{2}-/, date.strftime("%Y-%m-%d-"))
+        new_path = path.gsub(REGEXP_EXTRACT_DATE_FROM_FILENAME, date.strftime("#{FORMAT_DATE_FILENAME}-"))
         response.write(new_path)
       end
       r.post "update_path_title" do
         path = r.params['path']
         title = r.params['title']
         I18n.config.available_locales = :en
-        new_path = path.gsub(/(\d{4}-\d{2}-\d{2}-)(.*)(\.[^.]*)$/, "\\1#{App.transliterate_title_for_url(title)}\\3")
+        new_path = path.gsub(REGEXP_EXTRACT_DATE_TITLE_FROM_FILENAME, "\\1#{App.transliterate_title_for_url(title)}\\3")
         response.write(new_path)
       end
       r.post "update_date_today" do
-        date = Time.now.strftime('%Y-%m-%d %H:%M:%S %z')
+        date = Time.now.strftime(FORMAT_DATE_INPUT_FILENAME)
         response.write(date)
       end
     end
@@ -153,17 +224,29 @@ class App < Roda
       # Set variable for all routes in /hello branch
       @type_file = r.matched_path.split('/').compact.select{ |elt| elt != '' }.first
 
+      # Mkdir _pages _drafts _posts if they not exist
+      FileUtils.mkdir_p(File.join(Dir.pwd, "_#{@type_file}"))
+
       # GET /posts/index request
       # list all posts...
       r.get "index" do
         @files = Dir[File.join(Dir.pwd, "_#{@type_file}", '*')].sort.reverse
-        view("listing")
+        view("posts/listing")
       end
 
       r.get "new" do
         @file = ""
         @headers = {}
-        view("edit")
+        @new_record = @file.empty?
+        view("posts/edit")
+      end
+
+      # POST /posts/delete?file=truc request
+      # save the truc post
+      r.post "delete" do
+        @file = r.params['file']
+        File.unlink(@file)
+        r.redirect "/#{@type_file}/index?dir_path=#{File.dirname(@file)}"
       end
 
       r.is do
@@ -173,53 +256,71 @@ class App < Roda
           @file = r.params['file']
 
           content_file = File.read(@file)
-          @headers = content_file.scan(/---(.*?)---/m).flatten.first.split("\n")
-          @headers = @headers.select{ |header| !header.empty? }.map{ |header| header.scan(/([a-zA-Z]*): (.*)/).flatten }
-          pp @headers
-          @headers = Hash[@headers]
+          @headers = App.extract_header(content_file)
           @content = File.read(@file).gsub(/---(.*?)---/m, "")
-          
-          view("edit")
+
+          # for page
+          if @headers.empty?
+            r.redirect "/files/edit?dir_path=#{r.params['dir_path']}&file=#{@file}"
+          else
+            @new_record = @file.empty?
+            view("posts/edit")
+          end
         end
 
         # POST /posts?file=truc request
         # save the truc post
         r.post do
-          @file = r.params['file']
-          @content = r.params['content']
-          @filename = r.params['filename']
-          @tags = r.params['tags']
-          @content = r.params['content']
-          @date = r.params['date']
-          @meta = r.params['meta']
-          @format = r.params['format'] # TODO default format (md/html)
-          @publish = r.params['publish']
-          @layout = r.params['layout']
-          @title = r.params['title']
+          @file = r.params.delete('file') # in a route (new record : empty ELSE old filename)
+          @content = r.params.delete('content')
+          @filename = r.params.delete('filename')
+          @tags = r.params.delete('tags')
+          @date = r.params.delete('date')
+          @meta = r.params.delete('meta')
+          @format = r.params.delete('format')
+          @publish = r.params.delete('publish')
+          @layout = r.params.delete('layout')
+          @title = r.params.delete('title')
+          @new_file = r.params.delete('new_file') # form (new record : empty ELSE new filename)
 
-          if @file.nil? || @file.empty?
-            filename = App.urlize(@date, @title)
-            @file = File.join(Dir.pwd,"_#{@type_file}", "#{filename}.#{@format}")
+          #$stderr.puts "---->"
+
+          if @new_file.nil? || @new_file.empty?
+            filename = App.urlize(@date, @title, (@type_file != 'pages'))
+            @new_file = File.join(Dir.pwd,"_#{@type_file}", "#{filename}.#{@format}")
           end
 
           @headers = ['---']
-          @headers << ['tags', @tags.join(',')].join(': ')
+          @headers << ['tags', @tags.split(',').map(&:strip).join(',')].join(': ')
           @headers << ['layout', @layout].join(': ')
           @headers << ['date', @date.to_s].join(': ')
-          #@headers << ['meta', @tags.join(',')].join(': ')
+          @headers << ['title', @title.to_s].join(': ')
+          r.params.each do |k,v|
+            if k.start_with?('header')
+              @headers << [v.first, v.last.to_s].join(': ')
+            else
+              @headers << [k, v.to_s].join(': ')
+            end
+          end
           @headers << ['---']
+          @headers << ['']
 
-          File.open(File.join(Dir.pwd, @file), "w+") do |f|
+          File.open(@new_file, "w+") do |f|
             f.write(@headers.join("\n"))
             f.write(@content)
           end
-        end
 
-        # POST /posts/delete?file=truc request
-        # save the truc post
-        r.post "delete" do
-          @file = r.params['file']
-          File.unlink(File.join(Dir.pwd, @file))
+          # Change path of file
+          if !@file.to_s.empty? && @new_file.to_s != @file.to_s
+            File.unlink(@file)
+          end
+
+          # publish : move draft to post
+          if @publish == 'publish' && @new_file.to_s.include?('_drafts')
+            FileUtils.mv(@new_file, @new_file.gsub('_drafts','_posts'))
+          end
+
+          r.redirect "/#{@type_file}/index?dir_path=#{File.dirname(@new_file)}"
         end
       end
     end

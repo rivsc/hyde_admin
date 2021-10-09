@@ -10,7 +10,9 @@ edit: éditer
 delete: supprimer
 create: créer
 upload: uploader
-are_you_sure: êtes-vous sûr
+header: Entête
+are_you_sure: êtes-vous sûr ?
+add_header: ajouter un entête
 tag: mot-clé
 tags: mots-clés
 help_tags: Mettez les tags séparés par des virgules
@@ -29,7 +31,7 @@ date: date
 content: contenu
 publish: publier
 path: chemin
-help_path: changer le chemin peut affecter le SEO et provoquer des 404
+help_path: Vous pouvez déplacer le fichier en changeant le chemin. Changer le chemin peut affecter le SEO et provoquer des erreurs 404. Pour un nouveau fichier, c'est automatiquement remplit à la sousmission du formulaire.
 overview: aperçu
 submit: valider
 default_layout: présentation par défaut
@@ -50,3 +52,37 @@ set_date_today: mets la date du jour
 change_date_path: mets à jour la date dans le chemin de fichier
 change_title_path: mets à jour le titre dans le chemin de fichier
 directory_input_placeholder: nom du dossier à créer
+file_input_placeholder: nom du fichier à créer
+hyde_admin_auth: enable BasicAuth
+help_hyde_admin_auth: enable BasicAuth
+hyde_admin_user: BasicAuth user
+help_hyde_admin_user: BasicAuth user
+hyde_admin_password: BasicAuth password
+help_hyde_admin_password: BasicAuth password
+default_format: format par défaut
+help_default_format: format par défaut pour les posts
+display_layout: affiche le choix du layout sur le formulaire d'édition
+help_display_layout: affiche le choix du layout sur le formulaire d'édition
+display_format: affiche le choix du format sur le formulaire d'édition
+help_display_format: affiche le choix du format sur le formulaire d'édition
+images_path: chemin des images
+help_images_path: chemin local relatif des images
+editor_undo: Annuler
+editor_redo: Refaire
+editor_file: Ajouter image
+editor_list: Liste
+editor_list_ol: Liste numéroté
+editor_link: Ajouter lien
+editor_quote: Citation
+editor_title_h1: Titre H1
+editor_title_h2: Titre H2
+editor_title_h3: Titre H3
+editor_title_h4: Titre H4
+editor_title_h5: Titre H5
+editor_underline: Souligner
+editor_bold: Gras
+editor_italic: Italique
+editor_strikethrough: Barré
+default_alt_img: Texte alternatif
+default_title_img: Titre de l'image
+parent_dir: dossier parent

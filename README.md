@@ -1,4 +1,4 @@
-[Under construction... please wait]
+## Getting Started with Hyde Admin
 
 Add
 

@@ -1,0 +1,18 @@
+/* modal pictures */
+.modal-body-image{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.modal-body-image .image-element{
+    width: 150px;
+    height: 150px;
+}
+.modal-body-image .image-element img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    overflow: hidden;
+}
+.modal-body-image .image-element img:hover{
+    border:2px solid gray;
+}

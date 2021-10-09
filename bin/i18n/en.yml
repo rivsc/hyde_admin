@@ -10,7 +10,9 @@ edit: edit
 delete: delete
 create: create
 upload: upload
-are_you_sure: are you sure
+header: header
+add_header: add header
+are_you_sure: are you sure ?
 tag: tag
 tags: tags
 help_tags: set tags separate by comma
@@ -29,7 +31,7 @@ date: date
 content: content
 publish: publish
 path: path
-help_tags: change the path can affect SEO or 404
+help_path: You can move the file by changing the path. Change the path can affect SEO or causing 404 errors. For a new file, this is automatically filled at submit.
 overview: overview
 submit: submit
 default_layout: default layout
@@ -50,3 +52,37 @@ set_date_today: set date at today
 change_date_path: update date in path
 change_title_path: update title in path
 directory_input_placeholder: directory name to create
+file_input_placeholder: file name to create
+hyde_admin_auth: enable BasicAuth
+help_hyde_admin_auth: enable BasicAuth
+hyde_admin_user: BasicAuth user
+help_hyde_admin_user: BasicAuth user
+hyde_admin_password: BasicAuth password
+help_hyde_admin_password: BasicAuth password
+default_format: default format
+help_default_format: default format
+display_layout: display the layout input on edit form
+help_display_layout: display the layout input on edit form
+display_format: display the format input on edit form
+help_display_format: display the format input on edit form
+images_path: pictures path
+help_images_path: relative local picture path
+editor_undo: Undo
+editor_redo: Redo
+editor_file: Add picture
+editor_list: List
+editor_list_ol: Numbered List
+editor_link: Add link
+editor_quote: Quote
+editor_title_h1: Title H1
+editor_title_h2: Title H2
+editor_title_h3: Title H3
+editor_title_h4: Title H4
+editor_title_h5: Title H5
+editor_underline: Underline
+editor_bold: Bold
+editor_italic: Italic
+editor_strikethrough: Strikethrough
+default_alt_img: Alt text
+default_title_img: Title text
+parent_dir: dossier parent
