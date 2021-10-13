@@ -5,7 +5,7 @@ require 'yaml'
 require 'fileutils'
 require 'i18n'
 require 'date'
-require '../lib/hyde_admin/version'
+require_relative '../lib/hyde_admin/version'
 
 # TODO détecter format nouveau post (pour codemirror)
 
