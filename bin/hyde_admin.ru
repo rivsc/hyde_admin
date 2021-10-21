@@ -76,7 +76,7 @@ class App < Roda
   end
 
   def self.extract_tags(str)
-    str.scan(/^\[?(.*?)\]?$/).flatten.first.split(',')
+    str.to_s.scan(/^\[?(.*?)\]?$/).flatten.first.split(',')
   end
 
   FORMAT_DATE_FILENAME = '%Y-%m-%d'
