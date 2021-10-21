@@ -8,9 +8,9 @@ $(document).on('click', '.codemirror-toolbar .fa-file-image', function(){
   $('.modal-image').modal('show');
 });
 $(document).on('click', '.modal-image img', function(){
-  let img_src = '<img src="' + $(this).attr('src') + '" alt="<%= t.default_alt_img %>" title="<%= t.default_title_img %>" />';
+  let img_src = '<img src="' + $(this).attr('src') + '" alt="<%= EscapeUtils.escape_html t.default_alt_img %>" title="<%= EscapeUtils.escape_html t.default_title_img %>" />';
   if(window.mode_markdown){
-    img_src = '![<%= t.default_alt_img %>](' + $(this).attr('src') + ')';
+    img_src = '![<%= EscapeUtils.escape_html t.default_alt_img %>](' + $(this).attr('src') + ')';
   }
   window.myCodeMirror.replaceSelection(img_src);
   $('.modal-image').modal('hide');

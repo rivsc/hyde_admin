@@ -1,0 +1,8 @@
+<% path = File.join(Pathname.new(App.gem_source_path), 'admin_views', 'partials', 'image_element.html.erb') %>
+<% myerb = ERB.new(File.read(path), eoutvar: "@bidule") %>
+<% # Why %= don't work !? Need to do a loop concat... %>
+<% $stderr.puts @images %>
+<% (@images || []).each do |img| %>
+  <% @img = img.gsub(Dir.pwd, "") %>
+  <%= myerb.result(binding)  %>
+<% end %>

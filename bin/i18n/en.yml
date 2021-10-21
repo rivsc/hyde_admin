@@ -85,4 +85,11 @@ editor_italic: Italic
 editor_strikethrough: Strikethrough
 default_alt_img: Alt text
 default_title_img: Title text
-parent_dir: dossier parent
+parent_dir: parent directory
+sort_by_date: sort_by_date
+older: older first
+newer: newer first
+previous_images: previous images
+next_images: next images
+search: search
+filename: filename

@@ -86,3 +86,10 @@ editor_strikethrough: Barré
 default_alt_img: Texte alternatif
 default_title_img: Titre image
 parent_dir: dossier parent
+sort_by_date: tri par date
+older: vieille d'abord
+newer: récente d'abord
+previous_images: images précédentes " lol
+next_images: images suivantes
+search: recherche
+filename: nom de fichier

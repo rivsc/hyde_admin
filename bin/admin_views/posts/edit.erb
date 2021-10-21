@@ -1,49 +1,49 @@
-<h2><%= t.send(@type_file).capitalize %></h2>
+<h2><%= EscapeUtils.escape_html t.send(@type_file).capitalize %></h2>
 
 <% file_params = (!@new_record ? "?file=#{@file}" : "") %>
 
 <form action="/<%= @type_file %><%= file_params %>" method="post">
   <% if !@new_record %>
     <div class="mb-3">
-      <label for="i-path" class="form-label"><%= t.path.capitalize %></label>
+      <label for="i-path" class="form-label"><%= EscapeUtils.escape_html t.path.capitalize %></label>
       <div class="input-group">
+        <span class="input-group-text">
+          <i class="fas fa-calendar-alt" id="btn-date-path" title="<%= EscapeUtils.escape_html t.change_date_path %>"></i>
+        </span>
+        <span class="input-group-text">
+          <i class="fas fa-sync-alt" id="btn-title-path" title="<%= EscapeUtils.escape_html t.change_title_path %>"></i>
+        </span>
         <input type="text" class="form-control" value="<%= @file %>" name="new_file" id="i-path">
-        <span class="input-group-text">
-          <i class="fas fa-calendar-alt" id="btn-date-path" title="<%= t.change_date_path %>"></i>
-        </span>
-        <span class="input-group-text">
-          <i class="fas fa-sync-alt" id="btn-title-path" title="<%= t.change_title_path %>"></i>
-        </span>
       </div>
-      <div id="i-path-help" class="form-text"><%= t.help_path %></div>
+      <div id="i-path-help" class="form-text"><%= EscapeUtils.escape_html t.help_path %></div>
     </div>
   <% end %>
   <div class="mb-3">
-    <label for="i-title" class="form-label"><%= t.title.capitalize %></label>
+    <label for="i-title" class="form-label"><%= EscapeUtils.escape_html t.title.capitalize %></label>
     <input type="text" value="<%= @headers.delete('title') %>" class="form-control" name="title" id="i-title">
   </div>
   <div class="mb-3">
-    <label for="i-date" class="form-label"><%= t.date.capitalize %></label>
+    <label for="i-date" class="form-label"><%= EscapeUtils.escape_html t.date.capitalize %></label>
     <div class="input-group">
-      <input type="text" value="<%= @headers.delete('date') || Time.now.strftime('%Y-%m-%d %H:%M:%S %z') %>" class="form-control" name="date" id="i-date">
       <span class="input-group-text">
-        <i class="fas fa-calendar-day" id="btn-date-today" title="<%= t.set_date_today %>"></i>
+        <i class="fas fa-calendar-day" id="btn-date-today" title="<%= EscapeUtils.escape_html t.set_date_today %>"></i>
       </span>
+      <input type="text" value="<%= @headers.delete('date') || Time.now.strftime('%Y-%m-%d %H:%M:%S %z') %>" class="form-control" name="date" id="i-date">
     </div>
   </div>
   <div class="mb-3">
-    <label for="i-tags" class="form-label"><%= t.tags.capitalize %></label>
-    <input type="text" value="<%= @headers.delete('tags') %>" class="form-control" name="tags" id="i-tags">
-    <div id="i-tags-help" class="form-text"><%= t.help_tags %></div>
+    <label for="i-tags" class="form-label"><%= EscapeUtils.escape_html t.tags.capitalize %></label>
+    <input type="text" value="<%= App.extract_tags(@headers.delete('tags')).join(',') %>" class="form-control" name="tags" id="i-tags">
+    <div id="i-tags-help" class="form-text"><%= EscapeUtils.escape_html t.help_tags %></div>
   </div>
   <div class="mb-3 form-check">
     <input type="checkbox" class="form-check-input" name="publish" value="publish" id="i-publish">
-    <label class="form-check-label" for="i-publish"><%= t.publish.capitalize %></label>
+    <label class="form-check-label" for="i-publish"><%= EscapeUtils.escape_html t.publish.capitalize %></label>
   </div>
 
   <% if @hyde_parameters['display_layout'].to_s == 'true' %>
     <div class="mb-3">
-      <label for="i-layout" class="form-label"><%= t.layout.capitalize %></label>
+      <label for="i-layout" class="form-label"><%= EscapeUtils.escape_html t.layout.capitalize %></label>
       <select class="form-select" aria-label="Choice layout" name="layout">
         <% Dir.glob(File.join(Dir.pwd, '_layouts', '*')).each do |f| %>
           <% layout = File.basename(f, File.extname(f)) %>
@@ -58,7 +58,7 @@
 
   <% if @hyde_parameters['display_format'].to_s == 'true' %>
     <div class="mb-3">
-      <label for="i-format" class="form-label"><%= t.format.capitalize %></label>
+      <label for="i-format" class="form-label"><%= EscapeUtils.escape_html t.format.capitalize %></label>
       <select class="form-select" id="select-format" aria-label="Choice format" name="format">
         <% format = File.extname(@file) %>
         <% format = ".#{@hyde_parameters['default_format']}" if format.empty? %>
@@ -84,7 +84,7 @@
     </div>
   <% end %>
 
-  <a href="#" class="btn btn-secondary mb-2" id="add-header"><i class="fas fa-plus"></i> <%= t.add_header.capitalize %></a>
+  <a href="#" class="btn btn-secondary mb-2" id="add-header"><i class="fas fa-plus"></i> <%= EscapeUtils.escape_html t.add_header.capitalize %></a>
   <div class="mb-3 custom-headers"></div>
 
   <div class="mb-3 template-header" style="display: none">
@@ -109,14 +109,14 @@
   </script>
 
   <div class="mb-3">
-    <label for="i-content" class="form-label"><%= t.content.capitalize %> <a href="https://jekyllrb.com/docs/liquid/" class="text-secondary" target="_blank"><i class="fas fa-question-circle"></i></a></label>
+    <label for="i-content" class="form-label"><%= EscapeUtils.escape_html t.content.capitalize %> <a href="https://jekyllrb.com/docs/liquid/" class="text-secondary" target="_blank"><i class="fas fa-question-circle"></i></a></label>
 
-    <% path = File.join(Pathname.new(File.dirname(__FILE__)).parent, 'editor_html.erb') %>
+    <% path = File.join(Pathname.new(App.gem_source_path), 'admin_views', 'editor_html.erb') %>
     <%= ERB.new(File.read(path)).result(binding) %>
 
     <textarea class="form-control text-editor" id="i-content" rows="3" name="content"><%= @content %></textarea>
   </div>
-  <button type="submit" class="btn btn-primary"><%= t.submit.capitalize %></button>
+  <button type="submit" class="btn btn-primary"><%= EscapeUtils.escape_html t.submit.capitalize %></button>
 </form>
 
 <script type="text/javascript" charset="utf-8">
@@ -150,7 +150,7 @@
         return false;
     });
 
-    <% path = File.join(Pathname.new(File.dirname(__FILE__)).parent, 'editor_js.erb') %>
+    <% path = File.join(Pathname.new(App.gem_source_path), 'admin_views', 'editor_js.erb') %>
     <%= ERB.new(File.read(path)).result(binding) %>
 
 </script>

@@ -35,7 +35,7 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/<%= @hyde_parameters['site_index'] %>">
                   <span data-feather="home" class="fas fa-eye"></span>
-                  <%= t.overview.capitalize %>
+                  <%= EscapeUtils.escape_html t.overview.capitalize %>
                 </a>
               </li>
               <li class="nav-item">
@@ -43,52 +43,52 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/dashboard">
                   <span data-feather="home" class="fas fa-tachometer-alt"></span>
-                  <%= t.dashboard.capitalize %>
+                  <%= EscapeUtils.escape_html t.dashboard.capitalize %>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/pages/index">
                   <span data-feather="file" class="fas fa-file"></span>
-                  <%= t.pages.capitalize %>
+                  <%= EscapeUtils.escape_html t.pages.capitalize %>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/drafts/index">
                   <span data-feather="shopping-cart" class="fas fa-file"></span>
-                  <%= t.drafts.capitalize %>
+                  <%= EscapeUtils.escape_html t.drafts.capitalize %>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/posts/index">
                   <span data-feather="users" class="fas fa-file"></span>
-                  <%= t.posts.capitalize %>
+                  <%= EscapeUtils.escape_html t.posts.capitalize %>
                 </a>
               </li>
               <li class="nav-item"></li>
               <li class="nav-item">
                 <a class="nav-link" href="/files/index">
                   <span data-feather="users" class="fas fa-copy"></span>
-                  <%= t.files.capitalize %>
+                  <%= EscapeUtils.escape_html t.files.capitalize %>
                 </a>
               </li>
               <li class="nav-item"></li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/rebuild" id="btn-rebuild">
                   <span data-feather="home" class="fas fa-hammer"></span>
-                  <%= t.rebuild.capitalize %>
+                  <%= EscapeUtils.escape_html t.rebuild.capitalize %>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/deploy" id="btn-deploy">
                   <span data-feather="home" class="fas fa-cloud-upload-alt"></span>
-                  <%= t.deploy.capitalize %>
+                  <%= EscapeUtils.escape_html t.deploy.capitalize %>
                 </a>
               </li>
               <li class="nav-item"></li>
               <li class="nav-item">
                 <a class="nav-link" href="/configuration">
                   <span data-feather="layers" class="fas fa-tools"></span>
-                  <%= t.configuration.capitalize %>
+                  <%= EscapeUtils.escape_html t.configuration.capitalize %>
                 </a>
               </li>
             </ul>
@@ -125,19 +125,46 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Images</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <!--
+            <button type="button" class="btn btn-default close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
+            -->
           </div>
-          <div class="modal-body modal-body-image">
-            <% path_of_images = File.join(Dir.pwd, @hyde_parameters['images_path'], "**") %>
-            <% $stderr.puts(path_of_images) %>
-            <% Dir.glob(path_of_images)[(@page || 0) * 9, ((@page || 0) + 1) * 9 ].each do |img| %>
-              <% img = img.gsub(Dir.pwd, "") %>
-              <div class="image-element">
-                <img src="<%= img %>" alt="<%= img %>">
+          <div class="modal-body">
+            <div>
+              <div class="image-selector-search d-block" data-page="0">
+                <form action="" class="form-inline">
+                  <div class="form-group mb-2">
+                    <label for="inputPassword2" class="sr-only"><%= EscapeUtils.escape_html t.sort_by_date %></label>
+                    <label>
+                      <input class="form-check-input" type="radio" name="sort_date" value="asc"> <%= EscapeUtils.escape_html t.older %>
+                    </label>
+                    &nbsp;&nbsp;&nbsp;
+                    <label>
+                      <input class="form-check-input" type="radio" name="sort_date" value="desc"> <%= EscapeUtils.escape_html t.newer %>
+                    </label>
+                  </div>
+                  <div class="form-group mb-2">
+                    <label for="inputFilename" class="sr-only"><%= EscapeUtils.escape_html t.filename %></label>
+                    <input type="text" class="form-control" name="filename" id="inputFilename" placeholder="Filename...">
+                  </div>
+                  <button type="submit" class="btn btn-primary image-selector-search-submit d-block mb-2"><%= EscapeUtils.escape_html t.search %></button>
+                </form>
               </div>
-            <% end %>
+              <div class="image-selector-content">
+                <% path = File.join(Pathname.new(App.gem_source_path), 'admin_views', 'partials', 'images_page.html.erb') %>
+                <%= ERB.new(File.read(path)).result(binding) %>
+              </div>
+              <div class="image-selector-page">
+                <a href="#" title="<%= EscapeUtils.escape_html t.previous_images %>" class="btn btn-secondary image-selector-page-prev">
+                  <i class="fas fa-chevron-left"></i>
+                </a>
+                <a href="#" title="<%= EscapeUtils.escape_html t.next_images %>"class="btn btn-secondary image-selector-page-next">
+                  <i class="fas fa-chevron-right"></i>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -154,6 +181,38 @@
         });
       }
       <% end %>
+
+      function search(offset_page){
+          let sort_date = $('.image-selector-search input[name=sort_date]:checked').val();
+          let filename = $('.image-selector-search input[name=filename]').val();
+          let page = $('.image-selector-search').attr('data-page');
+          let new_page = parseInt(page) + offset_page;
+
+          if(new_page < 0){
+              new_page = 0;
+          }
+
+          $.post( "/ajax/images", { sort_date: sort_date, filename: filename, page: new_page })
+              .done(function( data ) {
+                  $('.image-selector-content').html(data);
+              });
+
+          $('.image-selector-search').attr('data-page', new_page);
+          return false;
+      }
+
+      $(document).on('click', '.image-selector-search-submit', function(){
+          search(0);
+          return false;
+      });
+      $(document).on('click', '.image-selector-page-prev', function(){
+          search(-1);
+          return false;
+      });
+      $(document).on('click', '.image-selector-page-next', function(){
+          search(1);
+          return false;
+      });
     </script>
     <script src="/fslightbox/fslightbox.js"></script>
   </body>

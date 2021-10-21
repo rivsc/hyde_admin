@@ -5,6 +5,7 @@ require 'yaml'
 require 'fileutils'
 require 'i18n'
 require 'date'
+require 'escape_utils'
 require_relative '../lib/hyde_admin/version'
 
 # TODO détecter format nouveau post (pour codemirror)
@@ -68,6 +69,14 @@ class App < Roda
 
   def self.remove_header(str)
     str.gsub(/---(.*?)---/m, "")
+  end
+
+  def self.gem_source_path
+    File.expand_path(File.dirname(__FILE__))
+  end
+
+  def self.extract_tags(str)
+    str.scan(/^\[?(.*?)\]?$/).flatten.first.split(',')
   end
 
   FORMAT_DATE_FILENAME = '%Y-%m-%d'
@@ -216,6 +225,27 @@ class App < Roda
       r.post "update_date_today" do
         date = Time.now.strftime(FORMAT_DATE_INPUT_FILENAME)
         response.write(date)
+      end
+      r.post "images" do
+        nb_elements_per_page = 9
+
+        sort_date = r.params['sort_date']
+        filename = r.params['filename']
+        page = r.params['page'].to_i
+        start_elts = (page || 0) * nb_elements_per_page
+
+        search_filename = "*#{filename.strip}*"
+
+        path_of_images = File.join(Dir.pwd, @hyde_parameters['images_path'], search_filename)
+
+        all_images = Dir.glob(path_of_images).sort_by {|filename| File.mtime(filename) }
+        all_images = all_images.reverse if sort_date == 'asc'
+        @images = all_images[start_elts, nb_elements_per_page]
+
+        path = File.join(Pathname.new(App.gem_source_path), 'admin_views', 'partials', 'images_page.html.erb')
+        data = ERB.new(File.read(path)).result(binding)
+
+        response.write(data)
       end
     end
 
