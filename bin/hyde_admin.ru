@@ -9,6 +9,8 @@ require 'escape_utils'
 require_relative '../lib/hyde_admin/version'
 
 # TODO détecter format nouveau post (pour codemirror)
+# Serve
+
 
 class App < Roda
   YML_FILE_NAME = "hyde_admin.yml"
@@ -114,12 +116,13 @@ class App < Roda
     end
 
     r.on "deploy" do
-      `#{@hyde_parameters['rsync_fullpath']} #{Dir.pwd}/_site/ #{@hyde_parameters['deploy_dest_user']}@#{@hyde_parameters['deploy_dest_address']}:#{@hyde_parameters['deploy_dest_path']}`
+      `#{@hyde_parameters['rsync_fullpath']} -avzr #{Dir.pwd}/_site/ #{@hyde_parameters['deploy_dest_user']}@#{@hyde_parameters['deploy_dest_address']}:#{@hyde_parameters['deploy_dest_path']}`
       r.redirect "/dashboard"
     end
 
     r.post "configuration" do
       r.params.each_pair do |k,v|
+        next if k.to_s == "beforeSend"
         @hyde_parameters[k] = v
       end
       File.open(File.join(Dir.pwd, YML_FILE_NAME),"w+") do |f|
@@ -136,6 +139,26 @@ class App < Roda
       view("dashboard")
     end
 
+    r.on "upload_image_form" do
+      render("upload_image_form")
+    end
+
+    r.post "upload_image" do
+      files = [r.params['files']].flatten # 1 or more files
+      @filenames = []
+      files.each do |file|
+        filename = file[:filename]
+        while File.exist?(File.join(@hyde_parameters['images_path'], filename))
+          filename = "#{File.basename(filename, File.extname(filename))}_#{File.extname(filename)}"
+        end
+        @filenames << filename
+        File.open(File.join(@hyde_parameters['images_path'], filename), 'wb') do |f|
+          f.write(file[:tempfile].read)
+        end
+      end
+      render("upload_image_form")
+    end
+
     r.on "files" do
       @dir_path = r.params['dir_path'] || Dir.pwd
 
@@ -150,6 +173,7 @@ class App < Roda
       r.post "create" do
         files = [r.params['files']].flatten # 1 or more files
         files.each do |file|
+          # TODO rename file if exist
           File.open(File.join(@dir_path, file[:filename]), 'wb') do |f|
             f.write(file[:tempfile].read)
           end
@@ -358,4 +382,7 @@ class App < Roda
   end
 end
 
+#use Rack::Static, :urls => [''], root: Dir.pwd
+
 run App.freeze.app
+

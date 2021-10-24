@@ -33,12 +33,6 @@
           <div class="position-sticky pt-3">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/<%= @hyde_parameters['site_index'] %>">
-                  <span data-feather="home" class="fas fa-eye"></span>
-                  <%= EscapeUtils.escape_html t.overview.capitalize %>
-                </a>
-              </li>
-              <li class="nav-item">
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/dashboard">
@@ -64,14 +58,20 @@
                   <%= EscapeUtils.escape_html t.posts.capitalize %>
                 </a>
               </li>
-              <li class="nav-item"></li>
               <li class="nav-item">
                 <a class="nav-link" href="/files/index">
                   <span data-feather="users" class="fas fa-copy"></span>
                   <%= EscapeUtils.escape_html t.files.capitalize %>
                 </a>
               </li>
-              <li class="nav-item"></li>
+              <li></li>
+              <li class="nav-item mb-4 mt-4">
+                <a class="nav-link" href="/configuration">
+                  <span data-feather="layers" class="fas fa-tools"></span>
+                  <%= EscapeUtils.escape_html t.configuration.capitalize %>
+                </a>
+              </li>
+              <li></li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/rebuild" id="btn-rebuild">
                   <span data-feather="home" class="fas fa-hammer"></span>
@@ -79,16 +79,15 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link active" aria-current="page" target="_blank" href="/<%= @hyde_parameters['site_index'] %>">
+                  <span data-feather="home" class="fas fa-eye"></span>
+                  <%= EscapeUtils.escape_html t.overview.capitalize %>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/deploy" id="btn-deploy">
                   <span data-feather="home" class="fas fa-cloud-upload-alt"></span>
                   <%= EscapeUtils.escape_html t.deploy.capitalize %>
-                </a>
-              </li>
-              <li class="nav-item"></li>
-              <li class="nav-item">
-                <a class="nav-link" href="/configuration">
-                  <span data-feather="layers" class="fas fa-tools"></span>
-                  <%= EscapeUtils.escape_html t.configuration.capitalize %>
                 </a>
               </li>
             </ul>
@@ -124,43 +123,45 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Images</h5>
+            <h5 class="modal-title"><%= t.images.capitalize %></h5>
             <!--
             <button type="button" class="btn btn-default close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
             -->
+            <button type="button" class="btn btn-outline-secondary btn-sm load-image">
+              <%= t.load_images.capitalize %>
+            </button>
           </div>
           <div class="modal-body">
             <div>
               <div class="image-selector-search d-block" data-page="0">
                 <form action="" class="form-inline">
                   <div class="form-group mb-2">
-                    <label for="inputPassword2" class="sr-only"><%= EscapeUtils.escape_html t.sort_by_date %></label>
                     <label>
-                      <input class="form-check-input" type="radio" name="sort_date" value="asc"> <%= EscapeUtils.escape_html t.older %>
+                      <input class="form-check-input" type="radio" name="sort_date" value="asc"> <%= EscapeUtils.escape_html t.newer.capitalize %>
                     </label>
                     &nbsp;&nbsp;&nbsp;
                     <label>
-                      <input class="form-check-input" type="radio" name="sort_date" value="desc"> <%= EscapeUtils.escape_html t.newer %>
+                      <input class="form-check-input" type="radio" name="sort_date" value="desc" checked> <%= EscapeUtils.escape_html t.older.capitalize %>
                     </label>
                   </div>
                   <div class="form-group mb-2">
-                    <label for="inputFilename" class="sr-only"><%= EscapeUtils.escape_html t.filename %></label>
-                    <input type="text" class="form-control" name="filename" id="inputFilename" placeholder="Filename...">
+                    <label for="inputFilename" class="sr-only"><%= EscapeUtils.escape_html t.filename.capitalize %></label>
+                    <input type="text" class="form-control" name="filename" id="inputFilename" placeholder="<%= EscapeUtils.escape_html t.filename_placeholder.capitalize %>">
                   </div>
-                  <button type="submit" class="btn btn-primary image-selector-search-submit d-block mb-2"><%= EscapeUtils.escape_html t.search %></button>
+                  <button type="submit" class="btn btn-primary image-selector-search-submit d-block mb-2"><%= EscapeUtils.escape_html t.search.capitalize %></button>
                 </form>
               </div>
               <div class="image-selector-content">
                 <% path = File.join(Pathname.new(App.gem_source_path), 'admin_views', 'partials', 'images_page.html.erb') %>
                 <%= ERB.new(File.read(path)).result(binding) %>
               </div>
-              <div class="image-selector-page">
-                <a href="#" title="<%= EscapeUtils.escape_html t.previous_images %>" class="btn btn-secondary image-selector-page-prev">
+              <div class="image-selector-page text-center">
+                <a href="#" title="<%= EscapeUtils.escape_html t.previous_images %>" class="btn btn-secondary image-selector-page-prev px-4">
                   <i class="fas fa-chevron-left"></i>
                 </a>
-                <a href="#" title="<%= EscapeUtils.escape_html t.next_images %>"class="btn btn-secondary image-selector-page-next">
+                <a href="#" title="<%= EscapeUtils.escape_html t.next_images %>" class="btn btn-secondary image-selector-page-next px-4">
                   <i class="fas fa-chevron-right"></i>
                 </a>
               </div>
@@ -213,6 +214,13 @@
           search(1);
           return false;
       });
+      $(document).on('click', '.load-image', function(){
+          var windowObjectReference = window.open("/upload_image_form", "update_image", "dialog=yes,menubar=no,location=no,resizable=no,scrollbars=yes,status=yes,outerWidth=800,innerHeight=300,width=800,height=300");
+          return false;
+      });
+      function reload_image(){
+          $('.load-image').click();
+      }
     </script>
     <script src="/fslightbox/fslightbox.js"></script>
   </body>

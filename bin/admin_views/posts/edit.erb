@@ -34,12 +34,15 @@
   <div class="mb-3">
     <label for="i-tags" class="form-label"><%= EscapeUtils.escape_html t.tags.capitalize %></label>
     <input type="text" value="<%= App.extract_tags(@headers.delete('tags')).join(',') %>" class="form-control" name="tags" id="i-tags">
-    <div id="i-tags-help" class="form-text"><%= EscapeUtils.escape_html t.help_tags %></div>
+    <div id="i-tags-help" class="form-text"><%= EscapeUtils.escape_html t.help_tags.capitalize %></div>
   </div>
-  <div class="mb-3 form-check">
-    <input type="checkbox" class="form-check-input" name="publish" value="publish" id="i-publish">
-    <label class="form-check-label" for="i-publish"><%= EscapeUtils.escape_html t.publish.capitalize %></label>
-  </div>
+
+  <% if @type_file == 'drafts' %>
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" name="publish" value="publish" id="i-publish">
+      <label class="form-check-label" for="i-publish"><%= EscapeUtils.escape_html t.publish.capitalize %></label>
+    </div>
+  <% end %>
 
   <% if @hyde_parameters['display_layout'].to_s == 'true' %>
     <div class="mb-3">
@@ -89,8 +92,8 @@
 
   <div class="mb-3 template-header" style="display: none">
     <div class="row">
-      <div class="col-sm-4"><input type="text" class="col-sm-6 form-control header-name" name="" placeholder="header name"></div>
-      <div class="col-sm-8"><input type="text" class="col-sm-6 form-control header-value" name="" placeholder="header value"></div>
+      <div class="col-sm-4"><input type="text" class="col-sm-6 form-control header-name" name="" placeholder="<%= EscapeUtils.escape_html t.header_name.capitalize %>"></div>
+      <div class="col-sm-8"><input type="text" class="col-sm-6 form-control header-value" name="" placeholder="<%= EscapeUtils.escape_html t.header_value.capitalize %>"></div>
     </div>
   </div>
 

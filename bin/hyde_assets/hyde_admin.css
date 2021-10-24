@@ -12,6 +12,7 @@
     height: 100%;
     object-fit: contain;
     overflow: hidden;
+    border:2px solid white;
 }
 .image-selector-content .image-element img:hover{
     border:2px solid gray;
@@ -23,9 +24,9 @@
 
 .image-element span{
     position: absolute;
-    bottom:5px;
+    bottom:0px;
     left:5px;
     z-index: 10;
     font-weight: bold;
-    text-shadow:white 0px 0px 3px, white 0px 0px 2px;
+    margin-bottom: -20px;
 }

@@ -14,12 +14,15 @@
       </th>
     </tr>
     <% @files.each do |f| %>
+      <% edit_path = "/#{@type_file}?file=#{f}" %>
     <tr>
       <td>
-        <%= f.gsub(File.join(Dir.pwd, ''),'') %>
+        <a href="<%= edit_path %>" class="link-dark">
+          <%= f.gsub(File.join(Dir.pwd, ''),'') %>
+        </a>
       </td>
       <td>
-        <a href="/<%= @type_file %>?file=<%= f %>" class="btn btn-default"><i class="fa fa-edit" title="<%= EscapeUtils.escape_html t.edit.capitalize %>"></i></a>
+        <a href="<%= edit_path %>" class="btn btn-default"><i class="fa fa-edit" title="<%= EscapeUtils.escape_html t.edit.capitalize %>"></i></a>
       </td>
       <td>
         <form method="post" action="/<%= @type_file %>/delete" class="inline form-confirm" data-confirm="<%= EscapeUtils.escape_html t.are_you_sure %>">

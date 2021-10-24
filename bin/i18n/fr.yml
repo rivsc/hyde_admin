@@ -93,3 +93,11 @@ previous_images: images précédentes " lol
 next_images: images suivantes
 search: recherche
 filename: nom de fichier
+filename_placeholder: nom de fichier...
+upload_image_form: formulaire d'upload d'image
+pictures_has_been_uploaded: les images ont été uploadées
+quit: quitter
+header_name: nom d'entête
+header_value: valeur d'entête
+images: images
+load_images: charger images

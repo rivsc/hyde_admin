@@ -93,3 +93,11 @@ previous_images: previous images
 next_images: next images
 search: search
 filename: filename
+filename_placeholder: filename...
+upload_image_form: upload image form
+pictures_has_been_uploaded: pictures has been uploaded
+quit: quit
+header_name: header name
+header_value: header value
+images: images
+load_images: load images

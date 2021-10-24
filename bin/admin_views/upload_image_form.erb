@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>Hyde for Jekyll</title>
+
+    <meta name="description" content="Hyde for Jekyll">
+    <meta name="author" content="Sylvain Claudel (https://blog.rivsc.ovh)">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" charset="utf-8">
+      $(function(){
+          $(document).on('click', '.btn-return-to-editor', function(){
+              //don't work
+              //window.opener.reload_image();
+              window.close();
+          });
+      });
+    </script>
+  </head>
+  <body style="width:800px;" class="p-4">
+      <h1><%= t.upload_image_form.capitalize %></h1>
+
+      <% if @filenames %>
+        <%= t.pictures_has_been_uploaded.capitalize %> : <%= @filenames.join(', ') %>
+      <% end %>
+
+      <form enctype="multipart/form-data" method="post" action="/upload_image" class="row g-3">
+        <div class="col-10">
+          <input type="file" name="files[]" multiple class="form-control">
+        </div>
+        <div class="col-2">
+          <button class="btn btn-primary"><%= t.upload.capitalize %></button>
+        </div>
+      </form>
+
+      <button class="btn btn-secondary btn-return-to-editor fixed-bottom mb-4 ms-4"><%= t.quit.capitalize %></button>
+  </body>
+</html>
