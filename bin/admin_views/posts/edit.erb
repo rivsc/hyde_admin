@@ -33,7 +33,7 @@
   </div>
   <div class="mb-3">
     <label for="i-tags" class="form-label"><%= EscapeUtils.escape_html t.tags.capitalize %></label>
-    <input type="text" value="<%= App.extract_tags(@headers.delete('tags')).join(',') %>" class="form-control" name="tags" id="i-tags">
+    <input type="text" value="<%= Mid.extract_tags(@headers.delete('tags')).join(',') %>" class="form-control" name="tags" id="i-tags">
     <div id="i-tags-help" class="form-text"><%= EscapeUtils.escape_html t.help_tags.capitalize %></div>
   </div>
 
@@ -114,7 +114,7 @@
   <div class="mb-3">
     <label for="i-content" class="form-label"><%= EscapeUtils.escape_html t.content.capitalize %> <a href="https://jekyllrb.com/docs/liquid/" class="text-secondary" target="_blank"><i class="fas fa-question-circle"></i></a></label>
 
-    <% path = File.join(Pathname.new(App.gem_source_path), 'admin_views', 'editor_html.erb') %>
+    <% path = File.join(Pathname.new(Mid.gem_source_path), 'admin_views', 'editor_html.erb') %>
     <%= ERB.new(File.read(path)).result(binding) %>
 
     <textarea class="form-control text-editor" id="i-content" rows="3" name="content"><%= @content %></textarea>
@@ -153,7 +153,7 @@
         return false;
     });
 
-    <% path = File.join(Pathname.new(App.gem_source_path), 'admin_views', 'editor_js.erb') %>
+    <% path = File.join(Pathname.new(Mid.gem_source_path), 'admin_views', 'editor_js.erb') %>
     <%= ERB.new(File.read(path)).result(binding) %>
 
 </script>

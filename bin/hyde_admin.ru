@@ -11,8 +11,9 @@ require_relative '../lib/hyde_admin/version'
 # TODO détecter format nouveau post (pour codemirror)
 # Serve
 
+class Mid < Roda
+  plugin :middleware
 
-class App < Roda
   YML_FILE_NAME = "hyde_admin.yml"
 
   plugin :render,
@@ -58,7 +59,7 @@ class App < Roda
   end
 
   def self.extract_header(str)
-    headers = App.extract_header_str(str).to_s.split("\n")
+    headers = Mid.extract_header_str(str).to_s.split("\n")
     headers = headers.select{ |header| !header.empty? }.map{ |header| header.scan(/([a-zA-Z0-9]*): (.*)/).flatten }.select{ |header| !header.empty? }
     hsh_headers = {}
     if !headers.flatten.empty?
@@ -200,8 +201,8 @@ class App < Roda
       r.get "edit" do
         @file = r.params['file']
         @content = File.read(@file)
-        @header = App.extract_header_str(@content)
-        @content = App.remove_header(@content)
+        @header = Mid.extract_header_str(@content)
+        @content = Mid.remove_header(@content)
         @has_header = (!@header.nil? && !@header.empty?)
         @has_editor = ['.html','.md'].include?(File.extname(@file))
         view("files/edit")
@@ -243,7 +244,7 @@ class App < Roda
         path = r.params['path']
         title = r.params['title']
         I18n.config.available_locales = :en
-        new_path = path.gsub(REGEXP_EXTRACT_DATE_TITLE_FROM_FILENAME, "\\1#{App.transliterate_title_for_url(title)}\\3")
+        new_path = path.gsub(REGEXP_EXTRACT_DATE_TITLE_FROM_FILENAME, "\\1#{Mid.transliterate_title_for_url(title)}\\3")
         response.write(new_path)
       end
       r.post "update_date_today" do
@@ -266,7 +267,7 @@ class App < Roda
         all_images = all_images.reverse if sort_date == 'asc'
         @images = all_images[start_elts, nb_elements_per_page]
 
-        path = File.join(Pathname.new(App.gem_source_path), 'admin_views', 'partials', 'images_page.html.erb')
+        path = File.join(Pathname.new(Mid.gem_source_path), 'admin_views', 'partials', 'images_page.html.erb')
         data = ERB.new(File.read(path)).result(binding)
 
         response.write(data)
@@ -310,7 +311,7 @@ class App < Roda
           @file = r.params['file']
 
           content_file = File.read(@file)
-          @headers = App.extract_header(content_file)
+          @headers = Mid.extract_header(content_file)
           @content = File.read(@file).gsub(/---(.*?)---/m, "")
 
           # for page
@@ -340,7 +341,7 @@ class App < Roda
           #$stderr.puts "---->"
 
           if @new_file.nil? || @new_file.empty?
-            filename = App.urlize(@date, @title, (@type_file != 'pages'))
+            filename = Mid.urlize(@date, @title, (@type_file != 'pages'))
             @new_file = File.join(Dir.pwd,"_#{@type_file}", "#{filename}.#{@format}")
           end
 
@@ -382,7 +383,11 @@ class App < Roda
   end
 end
 
-#use Rack::Static, :urls => [''], root: Dir.pwd
+# https://roda.jeremyevans.net/rdoc/classes/Roda/RodaPlugins/Middleware.html
+class App < Roda
+  use Mid
+  use Rack::Static, :urls => [''], root: Dir.pwd # allow to match all files in Dir.pwd
+end
 
 run App.freeze.app
 

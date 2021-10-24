@@ -154,7 +154,7 @@
                 </form>
               </div>
               <div class="image-selector-content">
-                <% path = File.join(Pathname.new(App.gem_source_path), 'admin_views', 'partials', 'images_page.html.erb') %>
+                <% path = File.join(Pathname.new(Mid.gem_source_path), 'admin_views', 'partials', 'images_page.html.erb') %>
                 <%= ERB.new(File.read(path)).result(binding) %>
               </div>
               <div class="image-selector-page text-center">
