@@ -1,3 +1,9 @@
+# 0.0.7
+
+Post edit : bugfix, keep layout & format when we don't show input.
+CodeMirror editor : form-control style
+Locales shows possible value for config.
+
 # 0.0.6
 
 Form upload image + style images selector

@@ -39,7 +39,7 @@ help_default_layout: default layout for jekyll posts/pages
 deploy_dest_user: deploy remote user
 help_deploy_dest_user: Ssh user for rsync
 deploy_dest_address: deploy remote domain
-help_deploy_dest_address: remote domain for ssh deployment
+help_deploy_dest_address: remote domain for ssh deployment (example.com)
 deploy_dest_path: deploy remote path
 help_deploy_dest_path: remote path on disk for ssh deployment
 rsync_fullpath: rsync path
@@ -47,24 +47,24 @@ help_rsync_fullpath: if rsync is not in PATH, othervise just let 'rsync'
 site_index: index file name of site
 help_site_index: link to open when we click on overview
 hyde_admin_language: hyde admin language
-help_hyde_admin_language: To change hyde admin language interface
+help_hyde_admin_language: To change hyde admin language interface (fr = french, en = english)
 set_date_today: set date at today
 change_date_path: update date in path
 change_title_path: update title in path
 directory_input_placeholder: directory name to create
 file_input_placeholder: file name to create
 hyde_admin_auth: enable BasicAuth
-help_hyde_admin_auth: enable BasicAuth
+help_hyde_admin_auth: enable BasicAuth (true/false)
 hyde_admin_user: BasicAuth user
 help_hyde_admin_user: BasicAuth user
 hyde_admin_password: BasicAuth password
 help_hyde_admin_password: BasicAuth password
 default_format: default format
-help_default_format: default format
+help_default_format: default format (html = html, md = markdown)
 display_layout: display the layout input on edit form
-help_display_layout: display the layout input on edit form
+help_display_layout: display the layout input on edit form (true/false)
 display_format: display the format input on edit form
-help_display_format: display the format input on edit form
+help_display_format: display the format input on edit form (true/false)
 images_path: pictures path
 help_images_path: relative local picture path
 editor_undo: Undo

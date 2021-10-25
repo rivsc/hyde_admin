@@ -39,7 +39,7 @@ help_default_layout: présentation par défaut pour les posts et pages
 deploy_dest_user: Utilisateur pour déploiement
 help_deploy_dest_user: Utilisateur pour déploiement par ssh
 deploy_dest_address: Adresse pour déploiement
-help_deploy_dest_address: Domaine ou adresse IP pour déploiement à travers ssh
+help_deploy_dest_address: Domaine ou adresse IP pour déploiement à travers ssh (example.com)
 deploy_dest_path: chemin distant pour déploiement
 help_deploy_dest_path: chemin distant pour déploiement du site
 rsync_fullpath: chemin rsync
@@ -47,24 +47,24 @@ help_rsync_fullpath: si rsync n'est pas dans le PATH, sinon laissez 'rsync'
 site_index: nom du fichier index pour le site
 help_site_index: Lien pour le lien aperçu, pensez à l'extention si nécessaire
 hyde_admin_language: hyde admin langue
-help_hyde_admin_language: Pour changer la langue d'interface de hyde admin
+help_hyde_admin_language: Pour changer la langue d'interface de hyde admin (fr = français, en = anglais)
 set_date_today: mets la date du jour
 change_date_path: mets à jour la date dans le chemin de fichier
 change_title_path: mets à jour le titre dans le chemin de fichier
 directory_input_placeholder: nom du dossier à créer
 file_input_placeholder: nom du fichier à créer
 hyde_admin_auth: enable BasicAuth
-help_hyde_admin_auth: enable BasicAuth
+help_hyde_admin_auth: enable BasicAuth (true/false)
 hyde_admin_user: BasicAuth user
 help_hyde_admin_user: BasicAuth user
 hyde_admin_password: BasicAuth password
 help_hyde_admin_password: BasicAuth password
 default_format: format par défaut
-help_default_format: format par défaut pour les posts
+help_default_format: format par défaut pour les posts (html = html, md = markdown)
 display_layout: affiche le choix du layout sur le formulaire d'édition
-help_display_layout: affiche le choix du layout sur le formulaire d'édition
+help_display_layout: affiche le choix du layout sur le formulaire d'édition (true/false)
 display_format: affiche le choix du format sur le formulaire d'édition
-help_display_format: affiche le choix du format sur le formulaire d'édition
+help_display_format: affiche le choix du format sur le formulaire d'édition (true/false)
 images_path: chemin des images
 help_images_path: chemin local relatif des images
 editor_undo: Annuler

@@ -18,6 +18,7 @@
       <div id="i-path-help" class="form-text"><%= EscapeUtils.escape_html t.help_path %></div>
     </div>
   <% end %>
+
   <div class="mb-3">
     <label for="i-title" class="form-label"><%= EscapeUtils.escape_html t.title.capitalize %></label>
     <input type="text" value="<%= @headers.delete('title') %>" class="form-control" name="title" id="i-title">
@@ -44,41 +45,39 @@
     </div>
   <% end %>
 
+  <% selected_layout = @headers.delete('layout') %>
+  <% selected_layout = @hyde_parameters['default_layout'] if selected_layout.nil? || selected_layout.empty? %>
   <% if @hyde_parameters['display_layout'].to_s == 'true' %>
     <div class="mb-3">
       <label for="i-layout" class="form-label"><%= EscapeUtils.escape_html t.layout.capitalize %></label>
       <select class="form-select" aria-label="Choice layout" name="layout">
         <% Dir.glob(File.join(Dir.pwd, '_layouts', '*')).each do |f| %>
-          <% layout = File.basename(f, File.extname(f)) %>
-          <option <%= ((@headers['layout'] == f || (@headers['layout'].to_s.empty? && layout == @hyde_parameters['default_layout'])) ? 'selected' : '') %> value="<%= layout %>"><%= layout %></option>
+          <% layout_loop = File.basename(f, File.extname(f)) %>
+          <option <%= (layout_loop == selected_layout ? 'selected' : '') %> value="<%= layout_loop %>"><%= layout_loop %></option>
         <% end %>
       </select>
     </div>
-    <% @headers.delete('layout') %>
   <% else %>
-    <input type="hidden" name="layout" value="<%= @hyde_parameters['default_layout'] %>">
+    <input type="hidden" name="layout" value="<%= selected_layout %>">
   <% end %>
 
+  <% selected_format = File.extname(@file) %>
+  <% selected_format = ".#{@hyde_parameters['default_format']}" if selected_format.empty? %>
   <% if @hyde_parameters['display_format'].to_s == 'true' %>
     <div class="mb-3">
       <label for="i-format" class="form-label"><%= EscapeUtils.escape_html t.format.capitalize %></label>
       <select class="form-select" id="select-format" aria-label="Choice format" name="format">
-        <% format = File.extname(@file) %>
-        <% format = ".#{@hyde_parameters['default_format']}" if format.empty? %>
         <% { 'html' => 'html', 'markdown' => 'md' }.each do |k, v| %>
-          <option <%= (format == ".#{v}" ? 'selected' : '') %> value="<%= v %>"><%= k %></option>
+          <option <%= (selected_format == ".#{v}" ? 'selected' : '') %> value="<%= v %>"><%= k %></option>
         <% end %>
       </select>
     </div>
-    <script type="text/javascript" charset="utf-8">
-        window.mode_markdown = '<%= format %>' === '.md';
-    </script>
   <% else %>
-    <input type="hidden" name="format" value="<%= @hyde_parameters['default_format'] %>">
-    <script type="text/javascript" charset="utf-8">
-      window.mode_markdown = '<%= @hyde_parameters['default_format'] %>' === 'md';
-    </script>
+    <input type="hidden" name="format" value="<%= selected_format.gsub('.','') %>">
   <% end %>
+  <script type="text/javascript" charset="utf-8">
+      window.mode_markdown = '<%= selected_format %>' === '.md';
+  </script>
 
   <% @headers.each do |k,v| %>
     <div class="mb-3">
