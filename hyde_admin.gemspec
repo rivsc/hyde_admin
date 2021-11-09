@@ -31,4 +31,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency("escape_utils") # escape_javascript / escape_html
   #s.add_runtime_dependency("i18n", "~> 0.4.0") # I18n.transliterate (already required by jekyll)
   s.add_runtime_dependency('jekyll') # Because we call jekyll binary
+  s.add_runtime_dependency('image_processing') # JPEG quality
 end

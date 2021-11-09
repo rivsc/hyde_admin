@@ -101,3 +101,9 @@ header_name: header name
 header_value: header value
 images: images
 load_images: load images
+resize_format: jpg
+help_resize_format: jpg or png
+resize_size: 1500x1000
+help_resize_size: Downsize to fit to the specified size (resize preserve ratio), example 1500x1000
+resize_enable: true
+help_resize_enable: enable feature resize image at upload

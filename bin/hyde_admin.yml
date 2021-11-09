@@ -6,10 +6,13 @@ deploy_dest_path: "/absolute/remote/path/mysite"
 rsync_fullpath: rsync
 site_index: index.html
 hyde_admin_language: en
-hyde_admin_auth: false
+hyde_admin_auth: 'false'
 hyde_admin_user: admin
 hyde_admin_password: admin
 default_format: html
-display_layout: true
-display_format: true
+display_layout: 'true'
+display_format: 'true'
 images_path: assets/images/
+resize_format: jpg
+resize_size: 1500x1000
+resize_enable: 'true'

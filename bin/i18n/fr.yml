@@ -101,3 +101,9 @@ header_name: nom d'entête
 header_value: valeur d'entête
 images: images
 load_images: charger images
+resize_format: jpg
+help_resize_format: jpg ou png
+resize_size: 1500x1000
+help_resize_size: Réduit les image pour coller à la taille spécifiée (le redimensionnement préserve le ratio), exemple 1500x1000
+resize_enable: true
+help_resize_enable: active la fonctionnalité de redimensionnement d'image à l'upload

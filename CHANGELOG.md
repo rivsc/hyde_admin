@@ -1,3 +1,7 @@
+# 0.0.8
+
+Resize image at upload with ImageProcessing (MiniMagick)
+
 # 0.0.7
 
 Post edit : bugfix, keep layout & format when we don't show input.

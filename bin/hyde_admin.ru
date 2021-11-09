@@ -6,6 +6,7 @@ require 'fileutils'
 require 'i18n'
 require 'date'
 require 'escape_utils'
+require 'image_processing/mini_magick'
 require_relative '../lib/hyde_admin/version'
 
 # TODO détecter format nouveau post (pour codemirror)
@@ -82,6 +83,26 @@ class Mid < Roda
     str.to_s.scan(/^\[?(.*?)\]?$/).flatten.first.split(',')
   end
 
+  def self.resize_image(image_path,params)
+    dir = File.dirname(image_path)
+    basename = File.basename(image_path, File.extname(image_path))
+    while File.exist?("#{File.join(dir, "#{basename}_#{params['resize_size']}")}.#{params['resize_format']}")
+      basename += '_'
+    end
+    output_path = "#{File.join(dir, "#{basename}_#{params['resize_size']}")}.#{params['resize_format']}"
+
+    width,height = params['resize_size'].split("x")
+    ip = ImageProcessing::MiniMagick
+      .source(image_path)
+      .convert(params['resize_format'])
+      .resize_to_limit(width.to_i, height.to_i)
+    if params['resize_format'] == 'jpg'
+      ip = ip.saver(quality: 80, interlace: "Line")
+    end
+
+    ip.call(destination: output_path)
+  end
+
   FORMAT_DATE_FILENAME = '%Y-%m-%d'
   FORMAT_DATE_INPUT_FILENAME = '%Y-%m-%d %H:%M:%S %z'
 
@@ -155,6 +176,9 @@ class Mid < Roda
         @filenames << filename
         File.open(File.join(@hyde_parameters['images_path'], filename), 'wb') do |f|
           f.write(file[:tempfile].read)
+        end
+        if @hyde_parameters['resize_enable'] == 'true'
+          Mid.resize_image(File.join(@hyde_parameters['images_path'], filename), @hyde_parameters)
         end
       end
       render("upload_image_form")

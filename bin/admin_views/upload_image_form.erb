@@ -25,21 +25,25 @@
     </script>
   </head>
   <body style="width:800px;" class="p-4">
-      <h1><%= t.upload_image_form.capitalize %></h1>
+    <div class="container-fluid">
+      <div class="row">
+        <h1><%= t.upload_image_form.capitalize %></h1>
 
-      <% if @filenames %>
-        <%= t.pictures_has_been_uploaded.capitalize %> : <%= @filenames.join(', ') %>
-      <% end %>
+        <% if @filenames %>
+          <%= t.pictures_has_been_uploaded.capitalize %> : <%= @filenames.join(', ') %>
+        <% end %>
 
-      <form enctype="multipart/form-data" method="post" action="/upload_image" class="row g-3">
-        <div class="col-10">
-          <input type="file" name="files[]" multiple class="form-control">
-        </div>
-        <div class="col-2">
-          <button class="btn btn-primary"><%= t.upload.capitalize %></button>
-        </div>
-      </form>
+        <form enctype="multipart/form-data" method="post" action="/upload_image" class="row g-3">
+          <div class="col-10">
+            <input type="file" name="files[]" multiple class="form-control">
+          </div>
+          <div class="col-2">
+            <button class="btn btn-primary"><%= t.upload.capitalize %></button>
+          </div>
+        </form>
 
-      <button class="btn btn-secondary btn-return-to-editor fixed-bottom mb-4 ms-4"><%= t.quit.capitalize %></button>
+        <button class="btn btn-secondary btn-return-to-editor fixed-bottom mb-4 ms-4"><%= t.quit.capitalize %></button>
+      </div>
+    </div>
   </body>
 </html>
