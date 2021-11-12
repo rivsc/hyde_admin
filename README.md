@@ -25,3 +25,9 @@ hyde_admin.yml is automatically generated in your jekyll directory.
 (you can change settings with hyde_admin ou directly)
 
 Hyde_admin allow ssh deployment.
+
+## New version of hyde_admin ?
+
+Just install the lastest config file (your config file will be renamed, and latest config file will be installed), run :
+
+`hyde_admin_config`

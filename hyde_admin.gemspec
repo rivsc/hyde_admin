@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   all_files     = `git ls-files`.split("\n").reject{ |filepath| filepath.start_with? 'test/' }
   s.files       = all_files
 
-  s.executables   = ['hyde_admin']
+  s.executables   = ['hyde_admin','hyde_admin_config']
   s.bindir        = "bin"
   s.require_paths = ["lib"]
 

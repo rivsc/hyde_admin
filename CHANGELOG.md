@@ -1,3 +1,8 @@
+# 0.0.9
+
+Hide deploy button if 'deploy_dest_address' is empty.
+hyde_admin_config allow you to install the latest default config file.
+
 # 0.0.8
 
 Resize image at upload with ImageProcessing (MiniMagick)

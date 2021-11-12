@@ -1,0 +1,16 @@
+#!/bin/env ruby
+
+require 'fileutils'
+
+local_config_file = File.join(Dir.pwd, 'hyde_admin.yml')
+old_filename = "hyde_admin_old_#{Time.now.strftime('%Y_%m_%d')}.yml"
+
+# Backup actual config file
+if File.exist?(local_config_file)
+  FileUtils.mv(local_config_file, old_filename)
+end
+
+# Copy the default config file
+FileUtils.copy(File.join(File.expand_path(File.dirname(__FILE__)), 'hyde_admin.yml'), local_config_file)
+
+puts "#{local_config_file} copied, you can find your old config file here : #{old_filename} !"

@@ -84,12 +84,14 @@
                   <%= EscapeUtils.escape_html t.overview.capitalize %>
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/deploy" id="btn-deploy">
-                  <span data-feather="home" class="fas fa-cloud-upload-alt"></span>
-                  <%= EscapeUtils.escape_html t.deploy.capitalize %>
-                </a>
-              </li>
+              <% if !@hyde_parameters['deploy_dest_address'].blank? %>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/deploy" id="btn-deploy">
+                    <span data-feather="home" class="fas fa-cloud-upload-alt"></span>
+                    <%= EscapeUtils.escape_html t.deploy.capitalize %>
+                  </a>
+                </li>
+              <% end %>
             </ul>
             <p class="text-center text-muted"><br><br><em>Hyde Admin V.<%= HydeAdmin::VERSION %></em>&nbsp;&nbsp;&nbsp;<a href="https://github.com/rivsc/hyde_admin" class="link-secondary"><i class="fab fa-github"></i></a></p>
           </div>
