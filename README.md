@@ -6,8 +6,10 @@ Hyde_admin is a administration frontend for Jekyll (static site generator in Rub
 
 Add
 
-`gem 'hyde_admin'
-gem 'puma'`
+```
+gem 'hyde_admin'
+gem 'puma'
+```
 
 In the Gemfile of your jekyll site.
 
