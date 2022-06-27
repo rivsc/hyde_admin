@@ -2,6 +2,8 @@
 
 Hyde_admin is a administration frontend for Jekyll (static site generator in Ruby).
 
+![Hyde_admin for jekyll](hyde_admin_for_jekyll.png)
+
 ## Getting Started with Hyde Admin
 
 Add
