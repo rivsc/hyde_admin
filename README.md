@@ -7,6 +7,7 @@ Hyde_admin is a administration frontend for Jekyll (static site generator in Rub
 Add
 
 `gem 'hyde_admin'`
+`gem 'puma'`
 
 In the Gemfile of your jekyll site.
 
@@ -31,3 +32,7 @@ Hyde_admin allow ssh deployment.
 Just install the lastest config file (your config file will be renamed, and latest config file will be installed), run :
 
 `hyde_admin_config`
+
+## Error when bundle install
+
+[https://stackoverflow.com/questions/30818391/gem-eventmachine-fatal-error-openssl-ssl-h-file-not-found](https://stackoverflow.com/questions/30818391/gem-eventmachine-fatal-error-openssl-ssl-h-file-not-found)
