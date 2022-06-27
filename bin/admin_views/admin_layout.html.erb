@@ -84,7 +84,7 @@
                   <%= EscapeUtils.escape_html t.overview.capitalize %>
                 </a>
               </li>
-              <% if !@hyde_parameters['deploy_dest_address'].blank? %>
+              <% if !@hyde_parameters['deploy_dest_address'].to_s.empty? %>
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="/deploy" id="btn-deploy">
                     <span data-feather="home" class="fas fa-cloud-upload-alt"></span>
