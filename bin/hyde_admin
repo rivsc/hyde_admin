@@ -1,3 +1,3 @@
 #!/bin/env ruby
 
-`rackup "#{File.expand_path(File.dirname(__FILE__))}/hyde_admin.ru"`
+`rackup -o 0.0.0.0 -p 9292 "#{File.expand_path(File.dirname(__FILE__))}/hyde_admin.ru"`
