@@ -10,6 +10,7 @@ Add
 
 ```
 gem 'hyde_admin'
+gem 'rack', '2.2.4'
 gem 'puma'
 ```
 
