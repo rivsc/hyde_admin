@@ -6,7 +6,11 @@ Hyde_admin is a administration frontend for Jekyll (static site generator in Rub
 
 ## Getting Started with Hyde Admin
 
-Add
+Install
+
+ImageMagick
+
+And add
 
 ```
 gem 'hyde_admin'
