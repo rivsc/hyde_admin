@@ -1,3 +1,9 @@
+# 0.0.11
+
+Add logo hyde admin
+Increase image window size
+Add dependency to avoid to set them in jekyll site gemfile
+
 # 0.0.9
 
 Hide deploy button if 'deploy_dest_address' is empty.

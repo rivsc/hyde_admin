@@ -25,7 +25,7 @@ class Mid < Roda
   plugin :i18n, translations: File.join(File.expand_path(File.dirname(__FILE__)), 'i18n') # gem 'roda-i18n'
   opts[:root] = Dir.pwd
   plugin :public, root: File.join(Dir.pwd, '_site') # simulate jekyll site
-  plugin :static, ['/mode', '/lib', '/fslightbox', '/hyde_assets'], :root => File.join(File.expand_path(File.dirname(__FILE__)))
+  plugin :static, ['/mode', '/lib', '/fslightbox', '/hyde_assets', '/img'], :root => File.join(File.expand_path(File.dirname(__FILE__)))
   plugin :http_auth
   plugin :common_logger
 
@@ -38,6 +38,7 @@ class Mid < Roda
       FileUtils.cp(yml_in_gem, yml_in_current_dir)
     end
     @hyde_parameters ||= YAML.load(File.read(yml_in_current_dir))
+
     super(param)
   end
 
@@ -132,8 +133,8 @@ class Mid < Roda
 
     # Rebuild static files
     r.on "rebuild" do
-      puts Dir.pwd
-      `cd #{Dir.pwd} && jekyll b`
+      $stderr.puts Dir.pwd
+      $stderr.puts `cd #{Dir.pwd} && jekyll b`
       r.redirect "/dashboard"
     end
 
@@ -411,7 +412,8 @@ end
 class App < Roda
   use Mid
   use Rack::Static, :urls => [''], root: Dir.pwd # allow to match all files in Dir.pwd
+
+  $stderr.puts "===> Starting hyde_admin : open http://127.0.0.1:9292/"
 end
 
 run App.freeze.app
-

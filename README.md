@@ -6,16 +6,20 @@ Hyde_admin is a administration frontend for Jekyll (static site generator in Rub
 
 ## Getting Started with Hyde Admin
 
-Install
+# Prerequisite
 
-ImageMagick
+Install ImageMagick (required by mini_magick)
 
-And add
+```
+apt install imagemagick
+```
+
+# Install
+
+Add
 
 ```
 gem 'hyde_admin'
-gem 'rack', '2.2.4'
-gem 'puma'
 ```
 
 In the Gemfile of your jekyll site.
@@ -24,17 +28,19 @@ Run
 
 `bundle update`
 
-When run 
+# Run hyde_admin
+
+Run 
 
 `hyde_admin`
 
 in your jekyll directory.
-You can visit localhost:9292 !
+You can visit http://localhost:9292/ !
 
 hyde_admin.yml is automatically generated in your jekyll directory.
-(you can change settings with hyde_admin ou directly)
+(you can change settings with hyde_admin at http://localhost:9292/configuration or directly with text editor)
 
-Hyde_admin allow ssh deployment.
+Hyde_admin allow ssh deployment with rsync.
 
 ## New version of hyde_admin ?
 

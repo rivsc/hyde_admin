@@ -33,4 +33,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('jekyll') # Because we call jekyll binary
   s.add_runtime_dependency('image_processing') # JPEG quality
   s.add_runtime_dependency('mini_magick')
+  s.add_runtime_dependency('rack', '2.2.4')
+  s.add_runtime_dependency('puma')
 end
