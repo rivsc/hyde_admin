@@ -101,12 +101,15 @@ $(document).on('click', '.codemirror-toolbar .cmt-replace', function(){
       end_str = '';
     }
   }else if($(this).hasClass('fa-list-ol')){
-  begin_str = '<ol>\n  <li>';
-    end_str = '</li>\n</ol>';
-    if(window.mode_markdown){
-      begin_str = '1. ';
-      end_str = '';
-    }
+    begin_str = '<ol>\n  <li>';
+      end_str = '</li>\n</ol>';
+      if(window.mode_markdown){
+        begin_str = '1. ';
+        end_str = '';
+      }
+  }else if($(this).hasClass('fa-code')){
+    begin_str = '{% highlight ruby linenos %}\n';
+      end_str = '{% endhighlight %}\n';
   }
 
   let obj_cursor = window.myCodeMirror.getCursor();

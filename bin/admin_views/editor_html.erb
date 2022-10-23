@@ -21,4 +21,14 @@
     <button type="button" class="btn btn-light"><i class="fas fa-italic cmt-replace" title="<%= EscapeUtils.escape_html t.editor_italic %>"></i></button>
     <button type="button" class="btn btn-light"><i class="fas fa-strikethrough cmt-replace" title="<%= EscapeUtils.escape_html t.editor_strikethrough %>"></i></button>
   </div>
+  <div class="btn-group mr-2" role="group" aria-label="Liquid tags">
+    <button type="button" class="btn btn-light"><i class="fas fa-code cmt-replace" title="<%= EscapeUtils.escape_html t.editor_liquid_code %>"></i></button>
+  </div>
 </div>
+<% if @hyde_parameters['text_editor_maximized'].to_s == 'true' %>
+  <style>
+    .CodeMirror{
+      height: auto;
+    }
+  </style>
+<% end %>

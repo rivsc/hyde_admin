@@ -16,3 +16,4 @@ images_path: assets/images/
 resize_format: jpg
 resize_size: 1500x1000
 resize_enable: 'true'
+text_editor_maximized: 'true'

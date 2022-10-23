@@ -107,3 +107,5 @@ resize_size: "size to fit, example : 1500x1000"
 help_resize_size: Downsize to fit to the specified size (resize preserve ratio), example 1500x1000
 resize_enable: Enable resizing for images
 help_resize_enable: enable feature resize image at upload
+text_editor_maximized: enable maximised editor
+help_text_editor_maximized: permet d'agrandir l'éditeur au maximum du contenu

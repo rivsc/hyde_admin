@@ -107,3 +107,5 @@ resize_size: "Recadrer en (example : 1500x1000)"
 help_resize_size: Réduit les image pour coller à la taille spécifiée (le redimensionnement préserve le ratio), exemple 1500x1000
 resize_enable: activer redimensionnement
 help_resize_enable: active la fonctionnalité de redimensionnement d'image à l'upload
+text_editor_maximized: activer l'editeur maximisé
+help_text_editor_maximized: permet d'agrandir l'éditeur au maximum du contenu

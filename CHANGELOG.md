@@ -1,3 +1,8 @@
+# 0.0.12
+
+Add liquid code highlighter in wysiwyg editor
+Add new option to maximize text editor
+
 # 0.0.11
 
 Add logo hyde admin
