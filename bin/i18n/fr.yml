@@ -83,6 +83,8 @@ editor_underline: Souligner
 editor_bold: Gras
 editor_italic: Italique
 editor_strikethrough: Barré
+editor_pre_code: Code
+editor_liquid_code: Liquid code
 default_alt_img: Texte alternatif
 default_title_img: Titre image
 parent_dir: dossier parent

@@ -109,7 +109,14 @@ $(document).on('click', '.codemirror-toolbar .cmt-replace', function(){
       }
   }else if($(this).hasClass('fa-code')){
     begin_str = '{% highlight ruby linenos %}\n';
-      end_str = '{% endhighlight %}\n';
+    end_str = '{% endhighlight %}\n';
+  }else if($(this).hasClass('fa-terminal')){
+    begin_str = '<pre>\n';
+    end_str = '\n</pre>';
+    if(window.mode_markdown){
+      begin_str = '```';
+      end_str = '```';
+    }
   }
 
   let obj_cursor = window.myCodeMirror.getCursor();
