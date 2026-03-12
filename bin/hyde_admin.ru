@@ -63,7 +63,7 @@ class Mid < Roda
 
   def self.extract_header(str)
     headers = Mid.extract_header_str(str).to_s.split("\n")
-    headers = headers.select{ |header| !header.empty? }.map{ |header| header.scan(/([a-zA-Z0-9]*): (.*)/).flatten }.select{ |header| !header.empty? }
+    headers = headers.select{ |header| !header.empty? }.map{ |header| header.scan(/([a-zA-Z0-9_-]+): (.*)/).flatten }.select{ |header| !header.empty? }
     hsh_headers = {}
     if !headers.flatten.empty?
       #$stderr.puts "==============="
