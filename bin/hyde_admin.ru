@@ -117,6 +117,7 @@ class Mid < Roda
 
   route do |r|
     @page = r.params['page']
+    @notice = r.params['notice']
 
     if @hyde_parameters['hyde_admin_auth'].to_s == 'true'
       http_auth {|u, p| [u, p] == [@hyde_parameters['hyde_admin_user'], @hyde_parameters['hyde_admin_password']] }
@@ -140,12 +141,12 @@ class Mid < Roda
     r.on "rebuild" do
       $stderr.puts Dir.pwd
       $stderr.puts `cd #{Shellwords.escape(Dir.pwd)} && jekyll b`
-      r.redirect "/dashboard"
+      r.redirect "/dashboard?notice=#{EscapeUtils.escape_uri(t.rebuild + ' OK')}"
     end
 
     r.on "deploy" do
       `#{Shellwords.escape(@hyde_parameters['rsync_fullpath'])} -avzr #{Shellwords.escape("#{Dir.pwd}/_site/")} #{Shellwords.escape(@hyde_parameters['deploy_dest_user'])}@#{Shellwords.escape(@hyde_parameters['deploy_dest_address'])}:#{Shellwords.escape(@hyde_parameters['deploy_dest_path'])}`
-      r.redirect "/dashboard"
+      r.redirect "/dashboard?notice=#{EscapeUtils.escape_uri(t.deploy + ' OK')}"
     end
 
     r.post "configuration" do
@@ -156,7 +157,7 @@ class Mid < Roda
       File.open(File.join(Dir.pwd, YML_FILE_NAME),"w+") do |f|
         f.write(@hyde_parameters.to_yaml)
       end
-      r.redirect "/configuration"
+      r.redirect "/configuration?notice=#{EscapeUtils.escape_uri(t.configuration + ' OK')}"
     end
 
     r.get "configuration" do
