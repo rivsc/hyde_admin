@@ -25,14 +25,13 @@ Gem::Specification.new do |s|
   }
 
   s.license       = 'MIT'
-  s.add_runtime_dependency("roda", "~> 3.48.0")
-  s.add_runtime_dependency("roda-i18n", "~> 0.4.0")
-  s.add_runtime_dependency("roda-http-auth", "0.2.0")
-  s.add_runtime_dependency("escape_utils") # escape_javascript / escape_html
-  #s.add_runtime_dependency("i18n", "~> 0.4.0") # I18n.transliterate (already required by jekyll)
-  s.add_runtime_dependency('jekyll') # Because we call jekyll binary
-  s.add_runtime_dependency('image_processing') # JPEG quality
+  s.add_runtime_dependency("roda", "~> 3.48")
+  s.add_runtime_dependency("roda-i18n", "~> 0.4")
+  s.add_runtime_dependency("roda-http-auth", "~> 0.2")
+  s.add_runtime_dependency("escape_utils")
+  s.add_runtime_dependency('jekyll')
+  s.add_runtime_dependency('image_processing')
   s.add_runtime_dependency('mini_magick')
-  s.add_runtime_dependency('rack', '2.2.4')
+  s.add_runtime_dependency('rack', "~> 2.2")
   s.add_runtime_dependency('puma')
 end
