@@ -1,22 +1,25 @@
-$(function(){
-    $(document).on('click','#btn-deploy,#btn-rebuild',function(e){
+document.addEventListener('DOMContentLoaded', function(){
+    document.addEventListener('click', function(e){
+        var btn = e.target.closest('#btn-deploy, #btn-rebuild');
+        if(!btn) return;
         e.preventDefault();
-        var id = $(this).attr('id');
         var path = '';
-
-        if(id === 'btn-deploy'){
+        if(btn.id === 'btn-deploy'){
             path = '/deploy';
-        }else if(id === 'btn-rebuild'){
+        }else if(btn.id === 'btn-rebuild'){
             path = '/rebuild';
         }
-
-        $('#waiting').show();
-        $.post(path)
-            .always(function() {
-                $('#waiting').hide();
+        document.getElementById('waiting').style.display = 'block';
+        fetch(path, { method: 'POST' })
+            .finally(function() {
+                document.getElementById('waiting').style.display = 'none';
             });
     });
-    $(document).on('click','.form-confirm',function(){
-        return window.confirm($(this).attr('data-confirm'));
+    document.addEventListener('submit', function(e){
+        var form = e.target.closest('.form-confirm');
+        if(!form) return;
+        if(!window.confirm(form.getAttribute('data-confirm'))){
+            e.preventDefault();
+        }
     });
 });

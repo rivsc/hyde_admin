@@ -98,15 +98,17 @@
 
   <script type="text/javascript" charset="utf-8">
       window.custom_headers_i = 0;
-      $(document).on('click', '#add-header', function(){
-          $('.template-header').clone().appendTo('.custom-headers');
-          let elt = $('.custom-headers .template-header');
-          elt.find('.header-name').attr('name', 'header' + window.custom_headers_i + '[]');
-          elt.find('.header-value').attr('name', 'header' + window.custom_headers_i + '[]');
-          elt.show();
-          elt.removeClass('template-header');
+      document.addEventListener('click', function(e){
+          if(!e.target.closest('#add-header')) return;
+          e.preventDefault();
+          var tpl = document.querySelector('.template-header');
+          var clone = tpl.cloneNode(true);
+          clone.querySelector('.header-name').setAttribute('name', 'header' + window.custom_headers_i + '[]');
+          clone.querySelector('.header-value').setAttribute('name', 'header' + window.custom_headers_i + '[]');
+          clone.style.display = '';
+          clone.classList.remove('template-header');
+          document.querySelector('.custom-headers').appendChild(clone);
           window.custom_headers_i += 1;
-          return false;
       });
   </script>
 
@@ -122,34 +124,42 @@
 </form>
 
 <script type="text/javascript" charset="utf-8">
-    $(document).on('click', '#select-format', function(){
-        let ext_mode = { md: "markdown", html: "htmlmixed"};
-        console.log($('#select-format').val());
-        window.myCodeMirror.setOption("mode", ext_mode[$('#select-format').val()]);
-        window.mode_markdown = ($('#select-format').val() == 'md');
-        return true;
-    });
-    $(document).on('click', '#btn-date-path', function(){
-        $.post( "/ajax/update_path_date", { date: $('#i-date').val(), path: $('#i-path').val() })
-            .done(function( data ) {
-                $('#i-path').val(data);
-            });
-        return false;
-    });
-    $(document).on('click', '#btn-title-path', function(){
-        $.post( "/ajax/update_path_title", { title: $('#i-title').val(), path: $('#i-path').val() })
-            .done(function( data ) {
-                $('#i-path').val(data);
-            });
-        return false;
+    document.addEventListener('change', function(e){
+        if(!e.target.closest('#select-format')) return;
+        var ext_mode = { md: "markdown", html: "htmlmixed"};
+        var val = document.getElementById('select-format').value;
+        window.myCodeMirror.setOption("mode", ext_mode[val]);
+        window.mode_markdown = (val == 'md');
     });
 
-    $(document).on('click', '#btn-date-today', function(){
-        $.post( "/ajax/update_date_today", {})
-            .done(function( data ) {
-                $('#i-date').val(data);
-            });
-        return false;
+    function postForm(url, params) {
+        var body = new URLSearchParams(params);
+        return fetch(url, { method: 'POST', body: body }).then(function(r){ return r.text(); });
+    }
+
+    document.addEventListener('click', function(e){
+        if(e.target.closest('#btn-date-path')){
+            e.preventDefault();
+            postForm("/ajax/update_path_date", {
+                date: document.getElementById('i-date').value,
+                path: document.getElementById('i-path').value
+            }).then(function(data){ document.getElementById('i-path').value = data; });
+            return;
+        }
+        if(e.target.closest('#btn-title-path')){
+            e.preventDefault();
+            postForm("/ajax/update_path_title", {
+                title: document.getElementById('i-title').value,
+                path: document.getElementById('i-path').value
+            }).then(function(data){ document.getElementById('i-path').value = data; });
+            return;
+        }
+        if(e.target.closest('#btn-date-today')){
+            e.preventDefault();
+            postForm("/ajax/update_date_today", {})
+                .then(function(data){ document.getElementById('i-date').value = data; });
+            return;
+        }
     });
 
     <% path = File.join(Pathname.new(Mid.gem_source_path), 'admin_views', 'editor_js.erb') %>

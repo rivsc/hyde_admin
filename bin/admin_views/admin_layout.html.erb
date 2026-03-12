@@ -21,8 +21,6 @@
     <script src="/mode/yaml/yaml.js"></script>
     <script src="/mode/xml/xml.js"></script>
     <script src="/mode/markdown/markdown.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="/hyde_assets/hyde_admin.css">
     <script src="/hyde_assets/hyde_admin.js"></script>
   </head>
@@ -179,42 +177,49 @@
       <% end %>
 
       function search(offset_page){
-          let sort_date = $('.image-selector-search input[name=sort_date]:checked').val();
-          let filename = $('.image-selector-search input[name=filename]').val();
-          let page = $('.image-selector-search').attr('data-page');
-          let new_page = parseInt(page) + offset_page;
+          var container = document.querySelector('.image-selector-search');
+          var checkedRadio = container.querySelector('input[name=sort_date]:checked');
+          var sort_date = checkedRadio ? checkedRadio.value : 'desc';
+          var filename = container.querySelector('input[name=filename]').value;
+          var page = parseInt(container.getAttribute('data-page')) + offset_page;
 
-          if(new_page < 0){
-              new_page = 0;
-          }
+          if(page < 0){ page = 0; }
 
-          $.post( "/ajax/images", { sort_date: sort_date, filename: filename, page: new_page })
-              .done(function( data ) {
-                  $('.image-selector-content').html(data);
+          var body = new URLSearchParams({ sort_date: sort_date, filename: filename, page: page });
+          fetch("/ajax/images", { method: 'POST', body: body })
+              .then(function(r){ return r.text(); })
+              .then(function(data){
+                  document.querySelector('.image-selector-content').innerHTML = data;
               });
 
-          $('.image-selector-search').attr('data-page', new_page);
+          container.setAttribute('data-page', page);
           return false;
       }
 
-      $(document).on('click', '.image-selector-search-submit', function(){
-          search(0);
-          return false;
-      });
-      $(document).on('click', '.image-selector-page-prev', function(){
-          search(-1);
-          return false;
-      });
-      $(document).on('click', '.image-selector-page-next', function(){
-          search(1);
-          return false;
-      });
-      $(document).on('click', '.load-image', function(){
-          var windowObjectReference = window.open("/upload_image_form", "update_image", "dialog=yes,menubar=no,location=no,resizable=no,scrollbars=yes,status=yes,outerWidth=800,innerHeight=300,width=800,height=300");
-          return false;
+      document.addEventListener('click', function(e){
+          if(e.target.closest('.image-selector-search-submit')){
+              e.preventDefault();
+              search(0);
+              return;
+          }
+          if(e.target.closest('.image-selector-page-prev')){
+              e.preventDefault();
+              search(-1);
+              return;
+          }
+          if(e.target.closest('.image-selector-page-next')){
+              e.preventDefault();
+              search(1);
+              return;
+          }
+          if(e.target.closest('.load-image')){
+              e.preventDefault();
+              window.open("/upload_image_form", "update_image", "dialog=yes,menubar=no,location=no,resizable=no,scrollbars=yes,status=yes,outerWidth=800,innerHeight=300,width=800,height=300");
+              return;
+          }
       });
       function reload_image(){
-          $('.load-image').click();
+          document.querySelector('.load-image').click();
       }
     </script>
     <script src="/fslightbox/fslightbox.js"></script>
