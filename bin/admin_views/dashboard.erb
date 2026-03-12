@@ -1,1 +1,37 @@
 <h2><%= EscapeUtils.escape_html t.dashboard.capitalize %></h2>
+
+<div class="row mt-4">
+  <% posts_count = Dir[File.join(Dir.pwd, '_posts', '*')].size %>
+  <% drafts_count = Dir[File.join(Dir.pwd, '_drafts', '*')].size %>
+  <% pages_count = Dir[File.join(Dir.pwd, '_pages', '*')].size %>
+
+  <div class="col-md-4 mb-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-file"></i> <%= EscapeUtils.escape_html t.posts.capitalize %></h5>
+        <p class="display-6"><%= posts_count %></p>
+        <a href="/posts/index" class="btn btn-outline-primary btn-sm"><%= EscapeUtils.escape_html t.view.capitalize %></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-file"></i> <%= EscapeUtils.escape_html t.drafts.capitalize %></h5>
+        <p class="display-6"><%= drafts_count %></p>
+        <a href="/drafts/index" class="btn btn-outline-primary btn-sm"><%= EscapeUtils.escape_html t.view.capitalize %></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-file"></i> <%= EscapeUtils.escape_html t.pages.capitalize %></h5>
+        <p class="display-6"><%= pages_count %></p>
+        <a href="/pages/index" class="btn btn-outline-primary btn-sm"><%= EscapeUtils.escape_html t.view.capitalize %></a>
+      </div>
+    </div>
+  </div>
+</div>
