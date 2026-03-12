@@ -1,21 +1,19 @@
 $(function(){
-    $(document).on('click','#btn-deploy,#btn-rebuild',function(elt){
-        let path = '';
+    $(document).on('click','#btn-deploy,#btn-rebuild',function(e){
+        e.preventDefault();
+        var id = $(this).attr('id');
+        var path = '';
 
-        if(elt.id === 'btn-deploy'){
+        if(id === 'btn-deploy'){
             path = '/deploy';
-        }else if(elt.id === 'btn-rebuild'){
+        }else if(id === 'btn-rebuild'){
             path = '/rebuild';
         }
 
-        $.post( path, {
-            beforeSend: function( xhr ) {
-                $('#waiting').show();
-            }
-        })
-            .done(function( data ) {
+        $('#waiting').show();
+        $.post(path)
+            .always(function() {
                 $('#waiting').hide();
-                return false;
             });
     });
     $(document).on('click','.form-confirm',function(){
