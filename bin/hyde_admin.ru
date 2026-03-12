@@ -267,7 +267,11 @@ class Mid < Roda
       r.post "delete" do
         file = r.params['file']
         response.status = 403 and next unless Mid.safe_path?(file)
-        File.unlink(file)
+        if File.directory?(file)
+          FileUtils.rm_rf(file) if Dir[File.join(file, '*')].empty?
+        else
+          File.unlink(file)
+        end
         r.redirect "/files/index?dir_path=#{@dir_path}"
       end
     end
