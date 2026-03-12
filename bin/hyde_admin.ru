@@ -176,8 +176,12 @@ class Mid < Roda
       @filenames = []
       files.each do |file|
         filename = file[:filename]
+        ext = File.extname(filename)
+        base = File.basename(filename, ext)
+        counter = 1
         while File.exist?(File.join(@hyde_parameters['images_path'], filename))
-          filename = "#{File.basename(filename, File.extname(filename))}_#{File.extname(filename)}"
+          filename = "#{base}_#{counter}#{ext}"
+          counter += 1
         end
         @filenames << filename
         File.open(File.join(@hyde_parameters['images_path'], filename), 'wb') do |f|
