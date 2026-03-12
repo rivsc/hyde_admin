@@ -37,7 +37,7 @@ class Mid < Roda
     if !File.exist?(yml_in_current_dir)
       FileUtils.cp(yml_in_gem, yml_in_current_dir)
     end
-    @hyde_parameters ||= YAML.load(File.read(yml_in_current_dir))
+    @hyde_parameters ||= YAML.safe_load(File.read(yml_in_current_dir), permitted_classes: [Date, Time])
 
     super(param)
   end
