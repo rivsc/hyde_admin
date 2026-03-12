@@ -14,11 +14,11 @@
       </th>
     </tr>
     <% @files.each do |f| %>
-      <% edit_path = "/#{@type_file}?file=#{f}" %>
+      <% edit_path = "/#{@type_file}?file=#{EscapeUtils.escape_uri(f)}" %>
     <tr>
       <td>
         <a href="<%= edit_path %>" class="link-dark">
-          <%= f.gsub(File.join(Dir.pwd, ''),'') %>
+          <%= EscapeUtils.escape_html(f.gsub(File.join(Dir.pwd, ''),'')) %>
         </a>
       </td>
       <td>

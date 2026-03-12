@@ -13,7 +13,7 @@
         <span class="input-group-text">
           <i class="fas fa-sync-alt" id="btn-title-path" title="<%= EscapeUtils.escape_html t.change_title_path %>"></i>
         </span>
-        <input type="text" class="form-control" value="<%= @file %>" name="new_file" id="i-path">
+        <input type="text" class="form-control" value="<%= EscapeUtils.escape_html(@file) %>" name="new_file" id="i-path">
       </div>
       <div id="i-path-help" class="form-text"><%= EscapeUtils.escape_html t.help_path %></div>
     </div>
@@ -21,7 +21,7 @@
 
   <div class="mb-3">
     <label for="i-title" class="form-label"><%= EscapeUtils.escape_html t.title.capitalize %></label>
-    <input type="text" value="<%= @headers.delete('title') %>" class="form-control" name="title" id="i-title">
+    <input type="text" value="<%= EscapeUtils.escape_html(@headers.delete('title').to_s) %>" class="form-control" name="title" id="i-title">
   </div>
   <div class="mb-3">
     <label for="i-date" class="form-label"><%= EscapeUtils.escape_html t.date.capitalize %></label>
@@ -29,12 +29,12 @@
       <span class="input-group-text">
         <i class="fas fa-calendar-day" id="btn-date-today" title="<%= EscapeUtils.escape_html t.set_date_today %>"></i>
       </span>
-      <input type="text" value="<%= @headers.delete('date') || Time.now.strftime('%Y-%m-%d %H:%M:%S %z') %>" class="form-control" name="date" id="i-date">
+      <input type="text" value="<%= EscapeUtils.escape_html((@headers.delete('date') || Time.now.strftime('%Y-%m-%d %H:%M:%S %z')).to_s) %>" class="form-control" name="date" id="i-date">
     </div>
   </div>
   <div class="mb-3">
     <label for="i-tags" class="form-label"><%= EscapeUtils.escape_html t.tags.capitalize %></label>
-    <input type="text" value="<%= Mid.extract_tags(@headers.delete('tags')).join(',') %>" class="form-control" name="tags" id="i-tags">
+    <input type="text" value="<%= EscapeUtils.escape_html(Mid.extract_tags(@headers.delete('tags')).join(',')) %>" class="form-control" name="tags" id="i-tags">
     <div id="i-tags-help" class="form-text"><%= EscapeUtils.escape_html t.help_tags.capitalize %></div>
   </div>
 
@@ -81,8 +81,8 @@
 
   <% @headers.each do |k,v| %>
     <div class="mb-3">
-      <label for="i-<%= k %>" class="form-label"><%= k %></label>
-      <input type="text" value="<%= v %>" class="form-control" name="<%= k %>" id="i-<%= k %>">
+      <label for="i-<%= EscapeUtils.escape_html(k) %>" class="form-label"><%= EscapeUtils.escape_html(k) %></label>
+      <input type="text" value="<%= EscapeUtils.escape_html(v.to_s) %>" class="form-control" name="<%= EscapeUtils.escape_html(k) %>" id="i-<%= EscapeUtils.escape_html(k) %>">
     </div>
   <% end %>
 
@@ -116,7 +116,7 @@
     <% path = File.join(Pathname.new(Mid.gem_source_path), 'admin_views', 'editor_html.erb') %>
     <%= ERB.new(File.read(path)).result(binding) %>
 
-    <textarea class="form-control text-editor" id="i-content" rows="3" name="content"><%= @content %></textarea>
+    <textarea class="form-control text-editor" id="i-content" rows="3" name="content"><%= EscapeUtils.escape_html(@content.to_s) %></textarea>
   </div>
   <button type="submit" class="btn btn-primary"><%= EscapeUtils.escape_html t.submit.capitalize %></button>
 </form>
