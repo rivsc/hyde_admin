@@ -6,6 +6,7 @@ require 'fileutils'
 require 'i18n'
 require 'date'
 require 'escape_utils'
+require 'shellwords'
 require 'image_processing/mini_magick'
 require_relative '../lib/hyde_admin/version'
 
@@ -138,12 +139,12 @@ class Mid < Roda
     # Rebuild static files
     r.on "rebuild" do
       $stderr.puts Dir.pwd
-      $stderr.puts `cd #{Dir.pwd} && jekyll b`
+      $stderr.puts `cd #{Shellwords.escape(Dir.pwd)} && jekyll b`
       r.redirect "/dashboard"
     end
 
     r.on "deploy" do
-      `#{@hyde_parameters['rsync_fullpath']} -avzr #{Dir.pwd}/_site/ #{@hyde_parameters['deploy_dest_user']}@#{@hyde_parameters['deploy_dest_address']}:#{@hyde_parameters['deploy_dest_path']}`
+      `#{Shellwords.escape(@hyde_parameters['rsync_fullpath'])} -avzr #{Shellwords.escape("#{Dir.pwd}/_site/")} #{Shellwords.escape(@hyde_parameters['deploy_dest_user'])}@#{Shellwords.escape(@hyde_parameters['deploy_dest_address'])}:#{Shellwords.escape(@hyde_parameters['deploy_dest_path'])}`
       r.redirect "/dashboard"
     end
 
