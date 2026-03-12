@@ -80,6 +80,10 @@ class Mid < Roda
     File.expand_path(File.dirname(__FILE__))
   end
 
+  def self.safe_path?(path)
+    File.expand_path(path).start_with?(Dir.pwd)
+  end
+
   def self.extract_tags(str)
     str.to_s.scan(/^\[?(.*?)\]?$/).flatten.first.split(',')
   end
@@ -187,6 +191,7 @@ class Mid < Roda
 
     r.on "files" do
       @dir_path = r.params['dir_path'] || Dir.pwd
+      response.status = 403 and next unless Mid.safe_path?(@dir_path)
 
       # List files
       r.get "index" do
@@ -225,6 +230,7 @@ class Mid < Roda
       # Edit text files
       r.get "edit" do
         @file = r.params['file']
+        response.status = 403 and next unless Mid.safe_path?(@file)
         @content = File.read(@file)
         @header = Mid.extract_header_str(@content)
         @content = Mid.remove_header(@content)
@@ -236,6 +242,7 @@ class Mid < Roda
       # Update file
       r.post "update" do
         @file = r.params['file']
+        response.status = 403 and next unless Mid.safe_path?(@file)
         @content = r.params['content']
         @header = r.params['header']
         File.open(@file,"w+") do |f|
@@ -253,6 +260,7 @@ class Mid < Roda
       # Delete
       r.post "delete" do
         file = r.params['file']
+        response.status = 403 and next unless Mid.safe_path?(file)
         File.unlink(file)
         r.redirect "/files/index?dir_path=#{@dir_path}"
       end
@@ -325,6 +333,7 @@ class Mid < Roda
       # save the truc post
       r.post "delete" do
         @file = r.params['file']
+        response.status = 403 and next unless Mid.safe_path?(@file)
         File.unlink(@file)
         r.redirect "/#{@type_file}/index?dir_path=#{File.dirname(@file)}"
       end
@@ -334,6 +343,7 @@ class Mid < Roda
         # edit the truc post
         r.get do
           @file = r.params['file']
+          response.status = 403 and next unless Mid.safe_path?(@file)
 
           content_file = File.read(@file)
           @headers = Mid.extract_header(content_file)
