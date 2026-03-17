@@ -111,3 +111,7 @@ resize_enable: activer redimensionnement
 help_resize_enable: active la fonctionnalité de redimensionnement d'image à l'upload
 text_editor_maximized: activer l'editeur maximisé
 help_text_editor_maximized: permet d'agrandir l'éditeur au maximum du contenu
+global_search: recherche
+global_search_placeholder: rechercher articles, pages, fichiers...
+global_search_no_results: aucun résultat
+global_search_results_for: résultats pour

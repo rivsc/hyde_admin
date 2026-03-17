@@ -1,14 +1,14 @@
-<h2><%= EscapeUtils.escape_html t.edit.capitalize %></h2>
+<h2><%= CGI.escapeHTML t.edit.capitalize %></h2>
 
 <form action="/files/update?file=<%= @file %>" method="post">
   <% if @has_header %>
     <div class="mb-3">
-      <label for="i-header" class="form-label"><%= EscapeUtils.escape_html t.header.capitalize %></label>
+      <label for="i-header" class="form-label"><%= CGI.escapeHTML t.header.capitalize %></label>
       <textarea class="form-control text-editor" id="i-header" rows="3" name="header" style="font-family: <%= (['.html', '.xml', '.yml', '.js', '.md'].include?(File.extname(@file)) ? 'monospace' : 'inherit') %>"><%= @header %></textarea>
     </div>
   <% end %>
   <div class="mb-3">
-    <label for="i-content" class="form-label"><%= EscapeUtils.escape_html t.content.capitalize %>
+    <label for="i-content" class="form-label"><%= CGI.escapeHTML t.content.capitalize %>
       <% if ['.html','.md'].include?(File.extname(@file)) %>
         <a href="https://jekyllrb.com/docs/liquid/" class="text-secondary" target="_blank"><i class="fas fa-question-circle"></i></a>
       <% end %>
@@ -26,5 +26,5 @@
         <%= ERB.new(File.read(path)).result(binding) %>
     </script>
   </div>
-  <button type="submit" class="btn btn-primary"><%= EscapeUtils.escape_html t.submit.capitalize %></button>
+  <button type="submit" class="btn btn-primary"><%= CGI.escapeHTML t.submit.capitalize %></button>
 </form>

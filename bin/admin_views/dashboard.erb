@@ -1,4 +1,4 @@
-<h2><%= EscapeUtils.escape_html t.dashboard.capitalize %></h2>
+<h2><%= CGI.escapeHTML t.dashboard.capitalize %></h2>
 
 <div class="row mt-4">
   <% posts_count = Dir[File.join(Dir.pwd, '_posts', '*')].size %>
@@ -8,9 +8,9 @@
   <div class="col-md-4 mb-3">
     <div class="card text-center">
       <div class="card-body">
-        <h5 class="card-title"><i class="fas fa-file"></i> <%= EscapeUtils.escape_html t.posts.capitalize %></h5>
+        <h5 class="card-title"><i class="fas fa-file"></i> <%= CGI.escapeHTML t.posts.capitalize %></h5>
         <p class="display-6"><%= posts_count %></p>
-        <a href="/posts/index" class="btn btn-outline-primary btn-sm"><%= EscapeUtils.escape_html t.view.capitalize %></a>
+        <a href="/posts/index" class="btn btn-outline-primary btn-sm"><%= CGI.escapeHTML t.view.capitalize %></a>
       </div>
     </div>
   </div>
@@ -18,9 +18,9 @@
   <div class="col-md-4 mb-3">
     <div class="card text-center">
       <div class="card-body">
-        <h5 class="card-title"><i class="fas fa-file"></i> <%= EscapeUtils.escape_html t.drafts.capitalize %></h5>
+        <h5 class="card-title"><i class="fas fa-file"></i> <%= CGI.escapeHTML t.drafts.capitalize %></h5>
         <p class="display-6"><%= drafts_count %></p>
-        <a href="/drafts/index" class="btn btn-outline-primary btn-sm"><%= EscapeUtils.escape_html t.view.capitalize %></a>
+        <a href="/drafts/index" class="btn btn-outline-primary btn-sm"><%= CGI.escapeHTML t.view.capitalize %></a>
       </div>
     </div>
   </div>
@@ -28,9 +28,9 @@
   <div class="col-md-4 mb-3">
     <div class="card text-center">
       <div class="card-body">
-        <h5 class="card-title"><i class="fas fa-file"></i> <%= EscapeUtils.escape_html t.pages.capitalize %></h5>
+        <h5 class="card-title"><i class="fas fa-file"></i> <%= CGI.escapeHTML t.pages.capitalize %></h5>
         <p class="display-6"><%= pages_count %></p>
-        <a href="/pages/index" class="btn btn-outline-primary btn-sm"><%= EscapeUtils.escape_html t.view.capitalize %></a>
+        <a href="/pages/index" class="btn btn-outline-primary btn-sm"><%= CGI.escapeHTML t.view.capitalize %></a>
       </div>
     </div>
   </div>

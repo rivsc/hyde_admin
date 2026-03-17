@@ -110,4 +110,8 @@ help_resize_size: Downsize to fit to the specified size (resize preserve ratio),
 resize_enable: Enable resizing for images
 help_resize_enable: enable feature resize image at upload
 text_editor_maximized: enable maximised editor
-help_text_editor_maximized: permet d'agrandir l'éditeur au maximum du contenu
+help_text_editor_maximized: expand the editor to the maximum of the content
+global_search: search
+global_search_placeholder: search posts, pages, files...
+global_search_no_results: no results
+global_search_results_for: results for

@@ -1,33 +1,33 @@
-<h2><%= EscapeUtils.escape_html t.send(@type_file).capitalize %> &nbsp; <a href="/<%= @type_file %>/new" class="btn btn-secondary btn-sm"><i class="fas fa-plus"></i> <%= EscapeUtils.escape_html t.new.capitalize %></a></h2>
+<h2><%= CGI.escapeHTML t.send(@type_file).capitalize %> &nbsp; <a href="/<%= @type_file %>/new" class="btn btn-secondary btn-sm"><i class="fas fa-plus"></i> <%= CGI.escapeHTML t.new.capitalize %></a></h2>
 
 <div class="table-responsive">
-  <table class="table table-striped table-sm">
+  <table class="table table-striped table-sm table-bordered">
     <tr>
       <th>
-        <%= EscapeUtils.escape_html t.file.capitalize %>
+        <%= CGI.escapeHTML t.file.capitalize %>
       </th>
       <th>
-        <%= EscapeUtils.escape_html t.edit.capitalize %>
+        <%= CGI.escapeHTML t.edit.capitalize %>
       </th>
       <th>
-        <%= EscapeUtils.escape_html t.delete.capitalize %>
+        <%= CGI.escapeHTML t.delete.capitalize %>
       </th>
     </tr>
     <% @files.each do |f| %>
-      <% edit_path = "/#{@type_file}?file=#{EscapeUtils.escape_uri(f)}" %>
+      <% edit_path = "/#{@type_file}?file=#{CGI.escape(f)}" %>
     <tr>
       <td>
         <a href="<%= edit_path %>" class="link-dark">
-          <%= EscapeUtils.escape_html(f.gsub(File.join(Dir.pwd, ''),'')) %>
+          <%= CGI.escapeHTML(f.gsub(File.join(Dir.pwd, ''),'')) %>
         </a>
       </td>
       <td>
-        <a href="<%= edit_path %>" class="btn btn-default"><i class="fa fa-edit" title="<%= EscapeUtils.escape_html t.edit.capitalize %>"></i></a>
+        <a href="<%= edit_path %>" class="btn btn-default"><i class="fa fa-edit" title="<%= CGI.escapeHTML t.edit.capitalize %>"></i></a>
       </td>
       <td>
-        <form method="post" action="/<%= @type_file %>/delete" class="inline form-confirm" data-confirm="<%= EscapeUtils.escape_html t.are_you_sure %>">
+        <form method="post" action="/<%= @type_file %>/delete" class="inline form-confirm" data-confirm="<%= CGI.escapeHTML t.are_you_sure %>">
           <input type="hidden" name="file" value="<%= f %>">
-	        <button type="submit" class="btn btn-default"><i class="fa fa-trash" title="<%= EscapeUtils.escape_html t.delete.capitalize %>"></i></button>
+	        <button type="submit" class="btn btn-default"><i class="fa fa-trash" title="<%= CGI.escapeHTML t.delete.capitalize %>"></i></button>
         </form>
       </td>
     </tr>

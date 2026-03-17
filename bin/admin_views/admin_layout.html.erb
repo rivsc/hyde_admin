@@ -30,64 +30,70 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
           <div class="position-sticky pt-3">
             <a href="/"><img src="/img/logo.png" alt="Hyde Admin" title="Logo hyde admin" class="sidebarMenu-logo" /></a>
+            <form action="/search" method="get" class="px-3 mb-3">
+              <div class="input-group input-group-sm">
+                <input type="text" name="q" class="form-control" placeholder="<%= CGI.escapeHTML t.global_search_placeholder %>">
+                <button class="btn btn-outline-secondary" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+              </div>
+            </form>
             <ul class="nav flex-column">
               <li class="nav-item">
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/dashboard">
                   <span data-feather="home" class="fas fa-tachometer-alt"></span>
-                  <%= EscapeUtils.escape_html t.dashboard.capitalize %>
+                  <%= CGI.escapeHTML t.dashboard.capitalize %>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/pages/index">
                   <span data-feather="file" class="fas fa-file"></span>
-                  <%= EscapeUtils.escape_html t.pages.capitalize %>
+                  <%= CGI.escapeHTML t.pages.capitalize %>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/drafts/index">
                   <span data-feather="shopping-cart" class="fas fa-file"></span>
-                  <%= EscapeUtils.escape_html t.drafts.capitalize %>
+                  <%= CGI.escapeHTML t.drafts.capitalize %>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/posts/index">
                   <span data-feather="users" class="fas fa-file"></span>
-                  <%= EscapeUtils.escape_html t.posts.capitalize %>
+                  <%= CGI.escapeHTML t.posts.capitalize %>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/files/index">
                   <span data-feather="users" class="fas fa-copy"></span>
-                  <%= EscapeUtils.escape_html t.files.capitalize %>
+                  <%= CGI.escapeHTML t.files.capitalize %>
                 </a>
               </li>
               <li></li>
               <li class="nav-item mb-4 mt-4">
                 <a class="nav-link" href="/configuration">
                   <span data-feather="layers" class="fas fa-tools"></span>
-                  <%= EscapeUtils.escape_html t.configuration.capitalize %>
+                  <%= CGI.escapeHTML t.configuration.capitalize %>
                 </a>
               </li>
               <li></li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/rebuild" id="btn-rebuild">
                   <span data-feather="home" class="fas fa-hammer"></span>
-                  <%= EscapeUtils.escape_html t.rebuild.capitalize %>
+                  <%= CGI.escapeHTML t.rebuild.capitalize %>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" target="_blank" href="/<%= @hyde_parameters['site_index'] %>">
                   <span data-feather="home" class="fas fa-eye"></span>
-                  <%= EscapeUtils.escape_html t.overview.capitalize %>
+                  <%= CGI.escapeHTML t.overview.capitalize %>
                 </a>
               </li>
               <% if !@hyde_parameters['deploy_dest_address'].to_s.empty? %>
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="/deploy" id="btn-deploy">
                     <span data-feather="home" class="fas fa-cloud-upload-alt"></span>
-                    <%= EscapeUtils.escape_html t.deploy.capitalize %>
+                    <%= CGI.escapeHTML t.deploy.capitalize %>
                   </a>
                 </li>
               <% end %>
@@ -95,10 +101,10 @@
             <p class="text-center text-muted"><br><br><em>Hyde Admin V.<%= HydeAdmin::VERSION %></em>&nbsp;&nbsp;&nbsp;<a href="https://github.com/rivsc/hyde_admin" class="link-secondary"><i class="fab fa-github"></i></a></p>
           </div>
         </nav>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main class="col-md-9 ms-sm-auto col-lg-10 p-4">
           <% if @notice && !@notice.empty? %>
             <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-              <%= EscapeUtils.escape_html(@notice) %>
+              <%= CGI.escapeHTML(@notice) %>
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
           <% end %>
@@ -114,14 +120,14 @@
     <div class="modal modal-image" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header d-flex" style="gap:8px;">
             <h5 class="modal-title"><%= t.images.capitalize %></h5>
             <!--
             <button type="button" class="btn btn-default close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
             -->
-            <button type="button" class="btn btn-outline-secondary btn-sm load-image">
+            <button type="button" class="btn btn-outline-secondary btn-sm load-image ml-4">
               <%= t.load_images.capitalize %>
             </button>
           </div>
@@ -131,18 +137,18 @@
                 <form action="" class="form-inline">
                   <div class="form-group mb-2">
                     <label>
-                      <input class="form-check-input" type="radio" name="sort_date" value="asc"> <%= EscapeUtils.escape_html t.newer.capitalize %>
+                      <input class="form-check-input" type="radio" name="sort_date" value="asc"> <%= CGI.escapeHTML t.newer.capitalize %>
                     </label>
                     &nbsp;&nbsp;&nbsp;
                     <label>
-                      <input class="form-check-input" type="radio" name="sort_date" value="desc" checked> <%= EscapeUtils.escape_html t.older.capitalize %>
+                      <input class="form-check-input" type="radio" name="sort_date" value="desc" checked> <%= CGI.escapeHTML t.older.capitalize %>
                     </label>
                   </div>
                   <div class="form-group mb-2">
-                    <label for="inputFilename" class="sr-only"><%= EscapeUtils.escape_html t.filename.capitalize %></label>
-                    <input type="text" class="form-control" name="filename" id="inputFilename" placeholder="<%= EscapeUtils.escape_html t.filename_placeholder.capitalize %>">
+                    <label for="inputFilename" class="sr-only"><%= CGI.escapeHTML t.filename.capitalize %></label>
+                    <input type="text" class="form-control" name="filename" id="inputFilename" placeholder="<%= CGI.escapeHTML t.filename_placeholder.capitalize %>">
                   </div>
-                  <button type="submit" class="btn btn-primary image-selector-search-submit d-block mb-2"><%= EscapeUtils.escape_html t.search.capitalize %></button>
+                  <button type="submit" class="btn btn-primary image-selector-search-submit d-block mb-2"><%= CGI.escapeHTML t.search.capitalize %></button>
                 </form>
               </div>
               <div class="image-selector-content">
@@ -150,10 +156,10 @@
                 <%= ERB.new(File.read(path)).result(binding) %>
               </div>
               <div class="image-selector-page text-center">
-                <a href="#" title="<%= EscapeUtils.escape_html t.previous_images %>" class="btn btn-secondary image-selector-page-prev px-4">
+                <a href="#" title="<%= CGI.escapeHTML t.previous_images %>" class="btn btn-secondary image-selector-page-prev px-4">
                   <i class="fas fa-chevron-left"></i>
                 </a>
-                <a href="#" title="<%= EscapeUtils.escape_html t.next_images %>" class="btn btn-secondary image-selector-page-next px-4">
+                <a href="#" title="<%= CGI.escapeHTML t.next_images %>" class="btn btn-secondary image-selector-page-next px-4">
                   <i class="fas fa-chevron-right"></i>
                 </a>
               </div>

@@ -33,16 +33,16 @@
           <%= t.pictures_has_been_uploaded.capitalize %> : <%= @filenames.join(', ') %>
         <% end %>
 
-        <form enctype="multipart/form-data" method="post" action="/upload_image" class="row g-3">
-          <div class="col-10">
+        <form enctype="multipart/form-data" method="post" action="/upload_image">
+          <div class="input-group mb-3">
             <input type="file" name="files[]" multiple class="form-control">
-          </div>
-          <div class="col-2">
             <button class="btn btn-primary"><%= t.upload.capitalize %></button>
           </div>
+
+          <a class="btn btn-secondary btn-return-to-editor"><%= t.quit.capitalize %></a>
         </form>
 
-        <button class="btn btn-secondary btn-return-to-editor fixed-bottom mb-4 ms-4"><%= t.quit.capitalize %></button>
+
       </div>
     </div>
   </body>

@@ -41,6 +41,18 @@
     max-width: 90vw;
 }
 
+#autosave-indicator {
+    display: inline-block;
+    margin-left: 12px;
+    font-size: 0.85em;
+    color: #6c757d;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+#autosave-indicator.visible {
+    opacity: 1;
+}
+
 .CodeMirror{
     border: 1px solid #ced4da;
     border-radius: 4px;

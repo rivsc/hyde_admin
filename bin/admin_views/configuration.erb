@@ -1,13 +1,13 @@
-<h2><%= EscapeUtils.escape_html t.configuration.capitalize %></h2>
+<h2><%= CGI.escapeHTML t.configuration.capitalize %></h2>
 
 <form action="/configuration" method="post">
   <% @hyde_parameters.each_pair do |setting, value| %>
     <div class="mb-3">
-      <label for="i-<%= setting %>" class="form-label"><%= (EscapeUtils.escape_html t.send(setting).capitalize rescue setting) %></label>
+      <label for="i-<%= setting %>" class="form-label"><%= (CGI.escapeHTML t.send(setting).capitalize rescue setting) %></label>
       <input type="text" class="form-control" value="<%= value %>" name="<%= setting %>" id="i-<%= setting %>">
-      <div id="i-<%= setting %>-help" class="form-text"><%= (EscapeUtils.escape_html t.send("help_#{setting}").capitalize rescue '') %></div>
+      <div id="i-<%= setting %>-help" class="form-text"><%= (CGI.escapeHTML t.send("help_#{setting}").capitalize rescue '') %></div>
     </div>
   <% end %>
-  <button type="submit" class="btn btn-primary"><%= EscapeUtils.escape_html t.submit.capitalize %></button>
+  <button type="submit" class="btn btn-primary"><%= CGI.escapeHTML t.submit.capitalize %></button>
 </form>
 

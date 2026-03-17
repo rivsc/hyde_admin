@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency("roda", "~> 3.48")
   s.add_runtime_dependency("roda-i18n", "~> 0.4")
   s.add_runtime_dependency("roda-http-auth", "~> 0.2")
-  s.add_runtime_dependency("escape_utils")
   s.add_runtime_dependency('jekyll')
   s.add_runtime_dependency('image_processing')
   s.add_runtime_dependency('mini_magick')

@@ -5,7 +5,7 @@ require 'yaml'
 require 'fileutils'
 require 'i18n'
 require 'date'
-require 'escape_utils'
+require 'cgi'
 require 'shellwords'
 require 'image_processing/mini_magick'
 require_relative '../lib/hyde_admin/version'
@@ -45,7 +45,7 @@ class Mid < Roda
 
   def self.transliterate_title_for_url(title)
     I18n.config.available_locales = :en
-    I18n.transliterate(title).downcase.gsub(/[^a-zA-Z ]/,'').gsub(' ','-')
+    I18n.transliterate(title).downcase.gsub(/[^a-zA-Z0-9 ]/,'').strip.gsub(/\s+/,'-').gsub(/-+/,'-').chomp('-')
   end
 
   def self.urlize(date_str, title, with_date = true)
@@ -141,12 +141,12 @@ class Mid < Roda
     r.on "rebuild" do
       $stderr.puts Dir.pwd
       $stderr.puts `cd #{Shellwords.escape(Dir.pwd)} && jekyll b`
-      r.redirect "/dashboard?notice=#{EscapeUtils.escape_uri(t.rebuild + ' OK')}"
+      r.redirect "/dashboard?notice=#{CGI.escape(t.rebuild + ' OK')}"
     end
 
     r.on "deploy" do
       `#{Shellwords.escape(@hyde_parameters['rsync_fullpath'])} -avzr #{Shellwords.escape("#{Dir.pwd}/_site/")} #{Shellwords.escape(@hyde_parameters['deploy_dest_user'])}@#{Shellwords.escape(@hyde_parameters['deploy_dest_address'])}:#{Shellwords.escape(@hyde_parameters['deploy_dest_path'])}`
-      r.redirect "/dashboard?notice=#{EscapeUtils.escape_uri(t.deploy + ' OK')}"
+      r.redirect "/dashboard?notice=#{CGI.escape(t.deploy + ' OK')}"
     end
 
     r.post "configuration" do
@@ -157,7 +157,7 @@ class Mid < Roda
       File.open(File.join(Dir.pwd, YML_FILE_NAME),"w+") do |f|
         f.write(@hyde_parameters.to_yaml)
       end
-      r.redirect "/configuration?notice=#{EscapeUtils.escape_uri(t.configuration + ' OK')}"
+      r.redirect "/configuration?notice=#{CGI.escape(t.configuration + ' OK')}"
     end
 
     r.get "configuration" do
@@ -166,6 +166,79 @@ class Mid < Roda
 
     r.on "dashboard" do
       view("dashboard")
+    end
+
+    r.get "search" do
+      @query = (r.params['q'] || '').strip
+      @results = []
+
+      if @query.length >= 2
+        normalized_query = @query.unicode_normalize(:nfkd).gsub(/\p{Mn}/, '').downcase
+
+        %w[_posts _pages _drafts].each do |dir|
+          type_name = dir.sub('_', '')
+          dir_path = File.join(Dir.pwd, dir)
+          next unless File.directory?(dir_path)
+
+          Dir.glob(File.join(dir_path, '**', '*')).select { |f| File.file?(f) }.each do |f|
+            content = File.read(f, encoding: 'utf-8') rescue next
+            headers = Mid.extract_header(content)
+            body = Mid.remove_header(content)
+            relative = f.gsub(File.join(Dir.pwd, ''), '')
+            searchable = [
+              File.basename(f),
+              headers['title'].to_s,
+              headers['tags'].to_s,
+              body.to_s[0, 500]
+            ].join(' ').unicode_normalize(:nfkd).gsub(/\p{Mn}/, '').downcase
+
+            if searchable.include?(normalized_query)
+              excerpt = nil
+              body_normalized = body.to_s.unicode_normalize(:nfkd).gsub(/\p{Mn}/, '').downcase
+              pos = body_normalized.index(normalized_query)
+              if pos
+                start = [pos - 60, 0].max
+                excerpt = body.to_s[start, 150].gsub(/\s+/, ' ').strip
+                excerpt = "...#{excerpt}..." if start > 0
+              end
+
+              @results << {
+                type: type_name,
+                path: f,
+                relative: relative,
+                title: headers['title'].to_s.empty? ? File.basename(f) : headers['title'],
+                tags: headers['tags'].to_s,
+                excerpt: excerpt,
+                edit_url: "/#{type_name}?file=#{CGI.escape(f)}"
+              }
+            end
+          end
+        end
+
+        # Search in files (root directory, excluding _ dirs and _site)
+        Dir.glob(File.join(Dir.pwd, '**', '*')).select { |f|
+          File.file?(f) &&
+          !f.include?('/_') &&
+          !f.include?('/_site') &&
+          !f.start_with?(File.join(Dir.pwd, '_'))
+        }.each do |f|
+          relative = f.gsub(File.join(Dir.pwd, ''), '')
+          searchable = File.basename(f).unicode_normalize(:nfkd).gsub(/\p{Mn}/, '').downcase
+          if searchable.include?(normalized_query)
+            @results << {
+              type: 'files',
+              path: f,
+              relative: relative,
+              title: File.basename(f),
+              tags: '',
+              excerpt: nil,
+              edit_url: "/files/edit?dir_path=#{CGI.escape(File.dirname(f))}&file=#{CGI.escape(f)}"
+            }
+          end
+        end
+      end
+
+      view("search")
     end
 
     r.on "upload_image_form" do

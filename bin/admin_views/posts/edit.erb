@@ -1,58 +1,65 @@
-<h2><%= EscapeUtils.escape_html t.send(@type_file).capitalize %></h2>
+<h2><%= CGI.escapeHTML t.send(@type_file).capitalize %></h2>
 
 <% file_params = (!@new_record ? "?file=#{@file}" : "") %>
 
-<form action="/<%= @type_file %><%= file_params %>" method="post">
+<form action="/<%= @type_file %><%= file_params %>" method="post" data-autosave-key="hyde_autosave:<%= @new_record ? "new:#{@type_file}" : @file %>">
+  <div id="autosave-banner" class="alert alert-warning d-none mb-3" role="alert">
+    <i class="fa-solid fa-clock-rotate-left"></i>
+    <span id="autosave-banner-text"></span>
+    <button type="button" class="btn btn-sm btn-warning ms-2" id="autosave-restore">Restore</button>
+    <button type="button" class="btn btn-sm btn-outline-secondary ms-2" id="autosave-discard">Discard</button>
+  </div>
   <% if !@new_record %>
     <div class="mb-3">
-      <label for="i-path" class="form-label"><%= EscapeUtils.escape_html t.path.capitalize %></label>
+      <label for="i-path" class="form-label"><%= CGI.escapeHTML t.path.capitalize %></label>
       <div class="input-group">
         <span class="input-group-text">
-          <i class="fas fa-calendar-alt" id="btn-date-path" title="<%= EscapeUtils.escape_html t.change_date_path %>"></i>
+          <i class="fas fa-calendar-alt" id="btn-date-path" title="<%= CGI.escapeHTML t.change_date_path %>"></i>
         </span>
         <span class="input-group-text">
-          <i class="fas fa-sync-alt" id="btn-title-path" title="<%= EscapeUtils.escape_html t.change_title_path %>"></i>
+          <i class="fas fa-sync-alt" id="btn-title-path" title="<%= CGI.escapeHTML t.change_title_path %>"></i>
         </span>
-        <input type="text" class="form-control" value="<%= EscapeUtils.escape_html(@file) %>" name="new_file" id="i-path">
+        <input type="text" class="form-control" value="<%= CGI.escapeHTML(@file) %>" name="new_file" id="i-path">
       </div>
-      <div id="i-path-help" class="form-text"><%= EscapeUtils.escape_html t.help_path %></div>
+      <div id="i-path-help" class="form-text"><%= CGI.escapeHTML t.help_path %></div>
     </div>
   <% end %>
 
   <div class="mb-3">
-    <label for="i-title" class="form-label"><%= EscapeUtils.escape_html t.title.capitalize %></label>
-    <input type="text" value="<%= EscapeUtils.escape_html(@headers.delete('title').to_s) %>" class="form-control" name="title" id="i-title">
+    <label for="i-title" class="form-label"><%= CGI.escapeHTML t.title.capitalize %></label>
+    <input type="text" value="<%= CGI.escapeHTML(@headers.delete('title').to_s) %>" class="form-control" name="title" id="i-title">
   </div>
   <div class="mb-3">
-    <label for="i-date" class="form-label"><%= EscapeUtils.escape_html t.date.capitalize %></label>
+    <label for="i-date" class="form-label"><%= CGI.escapeHTML t.date.capitalize %></label>
     <div class="input-group">
       <span class="input-group-text">
-        <i class="fas fa-calendar-day" id="btn-date-today" title="<%= EscapeUtils.escape_html t.set_date_today %>"></i>
+        <i class="fas fa-calendar-day" id="btn-date-today" title="<%= CGI.escapeHTML t.set_date_today %>"></i>
       </span>
-      <input type="text" value="<%= EscapeUtils.escape_html((@headers.delete('date') || Time.now.strftime('%Y-%m-%d %H:%M:%S %z')).to_s) %>" class="form-control" name="date" id="i-date">
+      <input type="text" value="<%= CGI.escapeHTML((@headers.delete('date') || Time.now.strftime('%Y-%m-%d %H:%M:%S %z')).to_s) %>" class="form-control" name="date" id="i-date">
     </div>
   </div>
   <div class="mb-3">
-    <label for="i-tags" class="form-label"><%= EscapeUtils.escape_html t.tags.capitalize %></label>
-    <input type="text" value="<%= EscapeUtils.escape_html(Mid.extract_tags(@headers.delete('tags')).join(',')) %>" class="form-control" name="tags" id="i-tags">
-    <div id="i-tags-help" class="form-text"><%= EscapeUtils.escape_html t.help_tags.capitalize %></div>
+    <label for="i-tags" class="form-label"><%= CGI.escapeHTML t.tags.capitalize %></label>
+    <input type="text" value="<%= CGI.escapeHTML(Mid.extract_tags(@headers.delete('tags')).join(',')) %>" class="form-control" name="tags" id="i-tags">
+    <div id="i-tags-help" class="form-text"><%= CGI.escapeHTML t.help_tags.capitalize %></div>
   </div>
 
   <% if @type_file == 'drafts' %>
     <div class="mb-3 form-check">
       <input type="checkbox" class="form-check-input" name="publish" value="publish" id="i-publish">
-      <label class="form-check-label" for="i-publish"><%= EscapeUtils.escape_html t.publish.capitalize %></label>
+      <label class="form-check-label" for="i-publish"><%= CGI.escapeHTML t.publish.capitalize %></label>
     </div>
   <% end %>
 
   <% selected_layout = @headers.delete('layout') %>
   <% selected_layout = @hyde_parameters['default_layout'] if selected_layout.nil? || selected_layout.empty? %>
+  <% available_layouts = Dir.glob(File.join(Dir.pwd, '_layouts', '*')).map { |f| File.basename(f, File.extname(f)) } %>
+  <% available_layouts.unshift(selected_layout) unless selected_layout.nil? || available_layouts.include?(selected_layout) %>
   <% if @hyde_parameters['display_layout'].to_s == 'true' %>
     <div class="mb-3">
-      <label for="i-layout" class="form-label"><%= EscapeUtils.escape_html t.layout.capitalize %></label>
+      <label for="i-layout" class="form-label"><%= CGI.escapeHTML t.layout.capitalize %></label>
       <select class="form-select" aria-label="Choice layout" name="layout">
-        <% Dir.glob(File.join(Dir.pwd, '_layouts', '*')).each do |f| %>
-          <% layout_loop = File.basename(f, File.extname(f)) %>
+        <% available_layouts.each do |layout_loop| %>
           <option <%= (layout_loop == selected_layout ? 'selected' : '') %> value="<%= layout_loop %>"><%= layout_loop %></option>
         <% end %>
       </select>
@@ -65,7 +72,7 @@
   <% selected_format = ".#{@hyde_parameters['default_format']}" if selected_format.empty? %>
   <% if @hyde_parameters['display_format'].to_s == 'true' %>
     <div class="mb-3">
-      <label for="i-format" class="form-label"><%= EscapeUtils.escape_html t.format.capitalize %></label>
+      <label for="i-format" class="form-label"><%= CGI.escapeHTML t.format.capitalize %></label>
       <select class="form-select" id="select-format" aria-label="Choice format" name="format">
         <% { 'html' => 'html', 'markdown' => 'md' }.each do |k, v| %>
           <option <%= (selected_format == ".#{v}" ? 'selected' : '') %> value="<%= v %>"><%= k %></option>
@@ -81,18 +88,18 @@
 
   <% @headers.each do |k,v| %>
     <div class="mb-3">
-      <label for="i-<%= EscapeUtils.escape_html(k) %>" class="form-label"><%= EscapeUtils.escape_html(k) %></label>
-      <input type="text" value="<%= EscapeUtils.escape_html(v.to_s) %>" class="form-control" name="<%= EscapeUtils.escape_html(k) %>" id="i-<%= EscapeUtils.escape_html(k) %>">
+      <label for="i-<%= CGI.escapeHTML(k) %>" class="form-label"><%= CGI.escapeHTML(k) %></label>
+      <input type="text" value="<%= CGI.escapeHTML(v.to_s) %>" class="form-control" name="<%= CGI.escapeHTML(k) %>" id="i-<%= CGI.escapeHTML(k) %>">
     </div>
   <% end %>
 
-  <a href="#" class="btn btn-secondary mb-2" id="add-header"><i class="fas fa-plus"></i> <%= EscapeUtils.escape_html t.add_header.capitalize %></a>
+  <a href="#" class="btn btn-secondary mb-2" id="add-header"><i class="fas fa-plus"></i> <%= CGI.escapeHTML t.add_header.capitalize %></a>
   <div class="mb-3 custom-headers"></div>
 
   <div class="mb-3 template-header" style="display: none">
     <div class="row">
-      <div class="col-sm-4"><input type="text" class="col-sm-6 form-control header-name" name="" placeholder="<%= EscapeUtils.escape_html t.header_name.capitalize %>"></div>
-      <div class="col-sm-8"><input type="text" class="col-sm-6 form-control header-value" name="" placeholder="<%= EscapeUtils.escape_html t.header_value.capitalize %>"></div>
+      <div class="col-sm-4"><input type="text" class="col-sm-6 form-control header-name" name="" placeholder="<%= CGI.escapeHTML t.header_name.capitalize %>"></div>
+      <div class="col-sm-8"><input type="text" class="col-sm-6 form-control header-value" name="" placeholder="<%= CGI.escapeHTML t.header_value.capitalize %>"></div>
     </div>
   </div>
 
@@ -113,14 +120,15 @@
   </script>
 
   <div class="mb-3">
-    <label for="i-content" class="form-label"><%= EscapeUtils.escape_html t.content.capitalize %> <a href="https://jekyllrb.com/docs/liquid/" class="text-secondary" target="_blank"><i class="fas fa-question-circle"></i></a></label>
+    <label for="i-content" class="form-label"><%= CGI.escapeHTML t.content.capitalize %> <a href="https://jekyllrb.com/docs/liquid/" class="text-secondary" target="_blank"><i class="fas fa-question-circle"></i></a></label>
 
     <% path = File.join(Pathname.new(Mid.gem_source_path), 'admin_views', 'editor_html.erb') %>
     <%= ERB.new(File.read(path)).result(binding) %>
 
-    <textarea class="form-control text-editor" id="i-content" rows="3" name="content"><%= EscapeUtils.escape_html(@content.to_s) %></textarea>
+    <textarea class="form-control text-editor" id="i-content" rows="3" name="content"><%= CGI.escapeHTML(@content.to_s) %></textarea>
   </div>
-  <button type="submit" class="btn btn-primary"><%= EscapeUtils.escape_html t.submit.capitalize %></button>
+  <button type="submit" class="btn btn-primary"><%= CGI.escapeHTML t.submit.capitalize %></button>
+  <span id="autosave-indicator"><i class="fa-solid fa-check"></i> Saved</span>
 </form>
 
 <script type="text/javascript" charset="utf-8">

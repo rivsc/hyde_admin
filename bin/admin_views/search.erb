@@ -1,0 +1,42 @@
+<h2><i class="fa-solid fa-magnifying-glass"></i> <%= CGI.escapeHTML t.global_search.capitalize %></h2>
+
+<form action="/search" method="get" class="mb-4">
+  <div class="input-group">
+    <input type="text" name="q" value="<%= CGI.escapeHTML(@query) %>" class="form-control" placeholder="<%= CGI.escapeHTML t.global_search_placeholder %>" autofocus>
+    <button class="btn btn-primary" type="submit"><%= CGI.escapeHTML t.search.capitalize %></button>
+  </div>
+</form>
+
+<% if @query.length >= 2 %>
+  <p class="text-muted"><%= @results.size %> <%= CGI.escapeHTML t.global_search_results_for %> "<%= CGI.escapeHTML(@query) %>"</p>
+
+  <% if @results.empty? %>
+    <p><%= CGI.escapeHTML t.global_search_no_results.capitalize %></p>
+  <% else %>
+    <% type_icons = { 'posts' => 'fa-file-lines', 'pages' => 'fa-file', 'drafts' => 'fa-file-pen', 'files' => 'fa-copy' } %>
+    <% @results.group_by { |r| r[:type] }.each do |type, results| %>
+      <h5 class="mt-4 mb-3"><i class="fa-solid <%= type_icons[type] || 'fa-file' %>"></i> <%= CGI.escapeHTML t.send(type).capitalize %></h5>
+      <div class="list-group mb-3">
+        <% results.each do |r| %>
+          <a href="<%= r[:edit_url] %>" class="list-group-item list-group-item-action">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong><%= CGI.escapeHTML(r[:title].to_s) %></strong>
+                <br><small class="text-muted"><%= CGI.escapeHTML(r[:relative]) %></small>
+                <% if r[:tags] && !r[:tags].empty? %>
+                  <br>
+                  <% r[:tags].split(',').each do |tag| %>
+                    <span class="badge bg-secondary"><%= CGI.escapeHTML(tag.strip) %></span>
+                  <% end %>
+                <% end %>
+                <% if r[:excerpt] %>
+                  <br><small class="text-muted fst-italic"><%= CGI.escapeHTML(r[:excerpt]) %></small>
+                <% end %>
+              </div>
+            </div>
+          </a>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

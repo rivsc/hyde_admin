@@ -16,9 +16,9 @@ document.addEventListener('click', function(e){
   var imgTarget = e.target.closest('.modal-image img');
   if(imgTarget){
     var src = imgTarget.getAttribute('src');
-    var img_src = '<img src="' + src + '" alt="<%= EscapeUtils.escape_html t.default_alt_img %>" title="<%= EscapeUtils.escape_html t.default_title_img %>" />';
+    var img_src = '<img src="' + src + '" alt="<%= CGI.escapeHTML t.default_alt_img %>" title="<%= CGI.escapeHTML t.default_title_img %>" />';
     if(window.mode_markdown){
-      img_src = '![<%= EscapeUtils.escape_html t.default_alt_img %>](' + src + ')';
+      img_src = '![<%= CGI.escapeHTML t.default_alt_img %>](' + src + ')';
     }
     window.myCodeMirror.replaceSelection(img_src);
     bootstrap.Modal.getInstance(document.querySelector('.modal-image')).hide();
