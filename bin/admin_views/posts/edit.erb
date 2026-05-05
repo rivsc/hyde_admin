@@ -1,3 +1,5 @@
+<div id="preview-wrapper">
+<div id="editor-panel">
 <h2><%= CGI.escapeHTML t.send(@type_file).capitalize %></h2>
 
 <% file_params = (!@new_record ? "?file=#{@file}" : "") %>
@@ -173,4 +175,81 @@
     <% path = File.join(Pathname.new(Mid.gem_source_path), 'admin_views', 'editor_js.erb') %>
     <%= ERB.new(File.read(path)).result(binding) %>
 
+    // Preview functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('#btn-preview')) {
+            e.preventDefault();
+            var wrapper = document.getElementById('preview-wrapper');
+            var panel = document.getElementById('preview-panel');
+
+            document.getElementById('waiting').style.display = 'block';
+
+            var content = window.myCodeMirror ? window.myCodeMirror.getValue() : document.getElementById('i-content').value;
+            var layoutEl = document.querySelector('select[name="layout"]') || document.querySelector('input[name="layout"]');
+            var formatEl = document.getElementById('select-format') || document.querySelector('input[name="format"]');
+
+            var body = new URLSearchParams({
+                content: content,
+                title: (document.getElementById('i-title') || {}).value || '',
+                date: (document.getElementById('i-date') || {}).value || '',
+                tags: (document.getElementById('i-tags') || {}).value || '',
+                layout: layoutEl ? layoutEl.value : '',
+                format: formatEl ? formatEl.value : 'md'
+            });
+
+            fetch('/ajax/preview', { method: 'POST', body: body })
+                .then(function(r) { return r.text(); })
+                .then(function(url) {
+                    document.getElementById('preview-iframe').src = url;
+                    panel.classList.remove('d-none');
+                    wrapper.classList.add('preview-active');
+                    document.querySelector('main').classList.add('preview-active-main');
+                    document.getElementById('waiting').style.display = 'none';
+                    setTimeout(function() {
+                        if (window.myCodeMirror) window.myCodeMirror.refresh();
+                    }, 100);
+                })
+                .catch(function() {
+                    document.getElementById('waiting').style.display = 'none';
+                });
+            return;
+        }
+
+        if (e.target.closest('#btn-refresh-preview')) {
+            e.preventDefault();
+            document.getElementById('btn-preview').click();
+            return;
+        }
+
+        if (e.target.closest('#btn-close-preview')) {
+            e.preventDefault();
+            var wrapper = document.getElementById('preview-wrapper');
+            var panel = document.getElementById('preview-panel');
+            panel.classList.add('d-none');
+            wrapper.classList.remove('preview-active');
+            document.querySelector('main').classList.remove('preview-active-main');
+            setTimeout(function() {
+                if (window.myCodeMirror) window.myCodeMirror.refresh();
+            }, 100);
+            return;
+        }
+    });
+
 </script>
+</div><!-- /editor-panel -->
+
+<div id="preview-panel" class="d-none">
+  <div class="preview-panel-header d-flex align-items-center justify-content-between p-2 bg-light border-bottom">
+    <span><i class="fas fa-eye"></i> <%= CGI.escapeHTML t.editor_preview %></span>
+    <div>
+      <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-refresh-preview" title="<%= CGI.escapeHTML t.preview_refresh %>">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+      <button type="button" class="btn btn-sm btn-outline-danger" id="btn-close-preview" title="<%= CGI.escapeHTML t.preview_close %>">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+  <iframe id="preview-iframe" src="about:blank"></iframe>
+</div>
+</div><!-- /preview-wrapper -->

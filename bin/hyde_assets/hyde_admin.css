@@ -58,6 +58,52 @@
     border-radius: 4px;
 }
 
+/* Preview split-screen */
+#preview-wrapper.preview-active {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 56px);
+}
+#preview-wrapper.preview-active #editor-panel {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-right: 8px;
+}
+#preview-wrapper.preview-active #preview-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    border-top: 2px solid #dee2e6;
+}
+#preview-panel .preview-panel-header {
+    flex-shrink: 0;
+}
+#preview-iframe {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border: none;
+    min-height: 0;
+}
+main.preview-active-main {
+    padding: 8px !important;
+    overflow: hidden;
+}
+@media (min-width: 1900px) {
+    #preview-wrapper.preview-active {
+        flex-direction: row;
+    }
+    #preview-wrapper.preview-active #editor-panel {
+        width: 50%;
+    }
+    #preview-wrapper.preview-active #preview-panel {
+        border-top: none;
+        border-left: 2px solid #dee2e6;
+    }
+}
+
 /* hyde admin style */
 .sidebarMenu-logo{
     width: 144px;

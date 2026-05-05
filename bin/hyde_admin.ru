@@ -149,6 +149,39 @@ class Mid < Roda
       r.redirect "/dashboard?notice=#{CGI.escape(t.deploy + ' OK')}"
     end
 
+    r.on "deploy_sftp" do
+      site_dir = "#{Dir.pwd}/_site"
+      sftp_user = @hyde_parameters['sftp_user']
+      sftp_host = @hyde_parameters['sftp_host']
+      sftp_port = @hyde_parameters['sftp_port'].to_s.empty? ? '22' : @hyde_parameters['sftp_port']
+      sftp_path = @hyde_parameters['sftp_dest_path']
+      sftp_password = @hyde_parameters['sftp_password']
+
+      batch_commands = []
+      Dir.glob("#{site_dir}/**/*").each do |local_path|
+        relative = local_path.sub("#{site_dir}/", '')
+        remote = "#{sftp_path}/#{relative}"
+        if File.directory?(local_path)
+          batch_commands << "-mkdir #{Shellwords.escape(remote)}"
+        else
+          batch_commands << "put #{Shellwords.escape(local_path)} #{Shellwords.escape(remote)}"
+        end
+      end
+
+      batch_file = File.join(Dir.pwd, '.sftp_batch')
+      File.write(batch_file, batch_commands.join("\n"))
+
+      sftp_cmd = "sftp -P #{Shellwords.escape(sftp_port)} -b #{Shellwords.escape(batch_file)}"
+      if !sftp_password.to_s.empty?
+        sftp_cmd = "sshpass -p #{Shellwords.escape(sftp_password)} #{sftp_cmd}"
+      end
+      sftp_cmd += " #{Shellwords.escape(sftp_user)}@#{Shellwords.escape(sftp_host)}"
+
+      `#{sftp_cmd}`
+      File.delete(batch_file) if File.exist?(batch_file)
+      r.redirect "/dashboard?notice=#{CGI.escape(t.deploy_sftp + ' OK')}"
+    end
+
     r.post "configuration" do
       r.params.each_pair do |k,v|
         next if k.to_s == "beforeSend"
@@ -366,6 +399,34 @@ class Mid < Roda
       r.post "update_date_today" do
         date = Time.now.strftime(FORMAT_DATE_INPUT_FILENAME)
         response.write(date)
+      end
+      r.post "preview" do
+        content = r.params['content']
+        title = r.params['title']
+        date = r.params['date']
+        layout = r.params['layout']
+        tags = r.params['tags']
+        format = r.params['format'] || 'md'
+
+        headers = ["---"]
+        headers << "title: #{title}" unless title.to_s.empty?
+        headers << "date: #{date}" unless date.to_s.empty?
+        headers << "layout: #{layout}" unless layout.to_s.empty?
+        headers << "tags: #{tags}" unless tags.to_s.empty?
+        headers << "---"
+        headers << ""
+
+        preview_file = File.join(Dir.pwd, "hyde-preview-tmp.#{format}")
+        File.open(preview_file, "w+") do |f|
+          f.write(headers.join("\n"))
+          f.write(content)
+        end
+
+        `cd #{Shellwords.escape(Dir.pwd)} && jekyll b 2>&1`
+
+        File.delete(preview_file) if File.exist?(preview_file)
+
+        response.write("/hyde-preview-tmp.html?t=#{Time.now.to_i}")
       end
       r.post "images" do
         nb_elements_per_page = 9

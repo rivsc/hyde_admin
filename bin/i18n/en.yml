@@ -44,6 +44,17 @@ deploy_dest_path: deploy remote path
 help_deploy_dest_path: remote path on disk for ssh deployment
 rsync_fullpath: rsync path
 help_rsync_fullpath: if rsync is not in PATH, othervise just let 'rsync'
+deploy_sftp: deploy SFTP
+sftp_user: SFTP user
+help_sftp_user: SFTP user for connection
+sftp_host: SFTP host
+help_sftp_host: SFTP server hostname or IP address
+sftp_port: SFTP port
+help_sftp_port: SFTP port (default 22)
+sftp_dest_path: SFTP remote path
+help_sftp_dest_path: remote path on the SFTP server for deployment
+sftp_password: SFTP password
+help_sftp_password: SFTP password (leave empty to use SSH key authentication)
 site_index: index file name of site
 help_site_index: link to open when we click on overview
 hyde_admin_language: hyde admin language
@@ -115,3 +126,7 @@ global_search: search
 global_search_placeholder: search posts, pages, files...
 global_search_no_results: no results
 global_search_results_for: results for
+editor_preview: Preview
+preview_building: Building preview...
+preview_close: Close preview
+preview_refresh: Refresh preview

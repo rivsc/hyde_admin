@@ -97,6 +97,14 @@
                   </a>
                 </li>
               <% end %>
+              <% if !@hyde_parameters['sftp_host'].to_s.empty? %>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/deploy_sftp" id="btn-deploy-sftp">
+                    <span data-feather="home" class="fas fa-cloud-upload-alt"></span>
+                    <%= CGI.escapeHTML t.deploy_sftp.capitalize %>
+                  </a>
+                </li>
+              <% end %>
             </ul>
             <p class="text-center text-muted"><br><br><em>Hyde Admin V.<%= HydeAdmin::VERSION %></em>&nbsp;&nbsp;&nbsp;<a href="https://github.com/rivsc/hyde_admin" class="link-secondary"><i class="fab fa-github"></i></a></p>
           </div>
