@@ -1,3 +1,34 @@
+# 0.0.14
+
+Security:
+- Use YAML.safe_load instead of YAML.load
+- Prevent path traversal on file operations
+- Escape shell arguments in rebuild and deploy commands
+- Escape HTML output in post/draft templates to prevent XSS
+
+Features:
+- Add preview & SFTP settings
+- Add search, improved filenames for posts, UI improvements, autosave/recovery
+- Add flash notice messages after rebuild, deploy and configuration save
+- Add posts/drafts/pages counters to dashboard
+
+Improvements:
+- Remove jQuery dependency, use vanilla JS and fetch API
+- Update Bootstrap from 5.1.1 to 5.3.8
+- Update Font Awesome from 5.15.4 to 6.7.2
+- Relax gem dependency version constraints
+
+Bugfixes:
+- Fix deploy/rebuild JS handler not working
+- Fix image upload duplicate rename producing wrong filenames
+- Frontmatter parser now supports keys with dashes and underscores
+- Handle directory deletion safely in file browser
+- Remove typo in french translation for previous_images
+
+# 0.0.13
+
+Add code highlighting
+
 # 0.0.12
 
 Add liquid code highlighter in wysiwyg editor
